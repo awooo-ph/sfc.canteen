@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="SFC.Canteen.Views.Employees"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SFC.Canteen.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Search: "/>
+            <TextBox Text="{Binding EmployeesKeyword,UpdateSourceTrigger=PropertyChanged}"
+                     Width="174"/>
+        </StackPanel>
+        <Button Grid.Row="0" HorizontalAlignment="Right" Margin="10" Command="{Binding NewEmployeeCommand}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="Plus"/>
+                <TextBlock Text=" New Employee"/>
+            </StackPanel>
+        </Button>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Employees}"
+                  AutoGenerateColumns="False"
+                  Grid.IsSharedSizeScope="True"
+                  CanUserAddRows="False" SelectionMode="Single"
+                  HeadersVisibility="Column"
+                  CanUserDeleteRows="False">
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="Add Credits" ToolTip="Add credits"
+                                          Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=TopupCommand}"
+                                          CommandParameter="{Binding}" />
+                                <MenuItem Header="Start Sales"
+                                          Command="{Binding  Source={x:Static viewModels:MainViewModel.Instance},Path=StartSalesCommand}"
+                                          CommandParameter="{Binding}" />
+                                <Separator />
+                                <MenuItem Header="Delete" Command="{Binding DeleteCommand}" />
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.ItemContainerStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="RFID" Binding="{Binding RFID}"/>
+                <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"/>
+                <DataGridTextColumn Header="Last Name" Binding="{Binding Lastname}"/>
+                <DataGridTextColumn Header="Job" Binding="{Binding Course}"/>
+                <DataGridTemplateColumn Header="Credits" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition SharedSizeGroup="a"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Credits,StringFormat={}#\,##0.00}"
+                                           TextAlignment="Right"
+                                           Margin="0 0 20 0"/>
+                                <!--<TextBlock Grid.Column="1">
+                                    <Hyperlink Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=TopupCommand}" CommandParameter="{Binding}">Topup</Hyperlink>
+                                </TextBlock>-->
+                            </Grid>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
