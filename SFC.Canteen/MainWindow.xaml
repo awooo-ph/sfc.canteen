@@ -1,0 +1,166 @@
+﻿<Window x:Class="SFC.Canteen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SFC.Canteen"
+        mc:Ignorable="d"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:SFC.Canteen.ViewModels"
+        xmlns:views="clr-namespace:SFC.Canteen.Views"
+        xmlns:converters="clr-namespace:SFC.Canteen.Converters"
+        DataContext="{vm:MainViewModel}"
+        WindowStartupLocation="CenterScreen"
+        Title="SFC Canteen" Height="555" Width="777">
+    <Window.InputBindings>
+        <KeyBinding Key="D1" Modifiers="Control" Command="{Binding ShowTabCommand}" CommandParameter="{x:Static vm:MainViewModel.STUDENTS}"/>
+        <KeyBinding Key="D2" Modifiers="Control" Command="{Binding ShowTabCommand}"
+                    CommandParameter="{x:Static vm:MainViewModel.EMPLOYEES}" />
+        <KeyBinding Key="D3" Modifiers="Control" Command="{Binding ShowTabCommand}"
+                    CommandParameter="{x:Static vm:MainViewModel.PRODUCTS}" />
+        <KeyBinding Key="D4" Modifiers="Control" Command="{Binding ShowTabCommand}"
+                    CommandParameter="{x:Static vm:MainViewModel.POS}" />
+        
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="_File">
+                <MenuItem Header="New">
+                    <MenuItem Header="_Student" Command="{Binding NewStudentCommand}" />
+                    <MenuItem Header="_Employee" Command="{Binding NewEmployeeCommand}" />
+                    <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
+                <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
+                <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
+                          CommandParameter="{Binding Students/}" />
+                <Separator/>
+                <MenuItem Header="Delete" Command="{Binding Students/DeleteCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Edit"
+                      Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
+                <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}"
+                          CommandParameter="{Binding Employees/}" />
+                <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
+                          CommandParameter="{Binding Employees/}" />
+                <Separator />
+                <MenuItem Header="Delete" Command="{Binding Employees/DeleteCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Edit"
+                      Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
+                <MenuItem Header="Add to Cart" Command="{Binding AddToCartCommand}"
+                          CommandParameter="{Binding Products/}" />
+                <MenuItem Header="Add Stocks" Command="{Binding AddStocksCommand}"
+                          CommandParameter="{Binding Products/}" />
+                <Separator />
+                <MenuItem Header="Delete" Command="{Binding Products/DeleteCommand}" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Students" 
+                          Icon="{md:PackIcon School}"
+                          InputGestureText="Ctrl+1"
+                          IsCheckable="True"
+                          IsChecked="{Binding ElementName=StudentsTab,Path=IsSelected,Mode=TwoWay}"/>
+                <MenuItem Header="_Employees"
+                          Icon="{md:PackIcon Account}"
+                          InputGestureText="Ctrl+2"
+                          IsCheckable="True"
+                          IsChecked="{Binding ElementName=EmployeesTab,Path=IsSelected,Mode=TwoWay}" />
+                <MenuItem Header="_Products"
+                          Icon="{md:PackIcon Food}"
+                          InputGestureText="Ctrl+3"
+                          IsCheckable="True"
+                          IsChecked="{Binding ElementName=ProductsTab,Path=IsSelected,Mode=TwoWay}" />
+                <MenuItem Header="P_oint-of-Sale"
+                          Icon="{md:PackIcon BarcodeScan}"
+                          InputGestureText="Ctrl+4"
+                          IsCheckable="True"
+                          IsChecked="{Binding ElementName=POSTab,Path=IsSelected,Mode=TwoWay}" />
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Calculator" Command="{Binding RunExternalCommand}" CommandParameter="calc"/>
+                <MenuItem Header="_Screen Snip" Command="{Binding RunExternalCommand}" CommandParameter="snippingtool"/>
+                <MenuItem Header="_Notepad" Command="{Binding RunExternalCommand}" CommandParameter="notepad"/>
+                <Separator/>
+                <MenuItem Header="_Options..." Command="{Binding OptionsCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="View Source" Command="{Binding ShowSourceCommand}"/>
+                <MenuItem Header="User Guide" Command="{Binding ShowUserGuideCommand}"/>
+                <Separator/>
+                <MenuItem Header="About SFC Canteen" Command="{Binding ShowAboutCommand}"/>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1" VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedTab}"
+                    Focusable="False" IsTabStop="False">
+            <TabItem x:Name="StudentsTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="School"/>
+                        <TextBlock Text=" Students"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:Students/>
+            </TabItem>
+
+            <TabItem x:Name="EmployeesTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="Account" />
+                        <TextBlock Text=" Employees" />
+                    </StackPanel>
+                </TabItem.Header>
+                <views:Employees/>
+            </TabItem>
+
+            <TabItem x:Name="ProductsTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="Food" />
+                        <TextBlock Text=" Products" />
+                    </StackPanel>
+                </TabItem.Header>
+                <views:Products/>
+            </TabItem>
+
+            <TabItem x:Name="POSTab">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="BarcodeScan" />
+                        <TextBlock Text=" Point-of-Sale" />
+                    </StackPanel>
+                </TabItem.Header>
+                <views:PointOfSale DataContext="{Binding PosViewModel}"/>
+            </TabItem>
+        </TabControl>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem Margin="10 0">
+                <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Kind="School" Margin="0 0 10 0"/>
+                    <TextBlock Text="{Binding Students.Count}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Margin="10 0">
+                <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Kind="Account" Margin="0 0 10 0" />
+                    <TextBlock Text="{Binding Employees.Count}" />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Margin="10 0">
+                <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Kind="Food" Margin="0 0 10 0" />
+                    <TextBlock Text="{Binding Products.Count}" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
