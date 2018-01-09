@@ -359,8 +359,6 @@ namespace SFC.Canteen.ViewModels
         },d=>
         {
             if (!PosViewModel.IsTransactionStarted) return false;
-            PosViewModel.AddProduct = d;
-            PosViewModel.Quantity = 1;
             return PosViewModel.AddProductCommand.CanExecute(null);
         }));
     }

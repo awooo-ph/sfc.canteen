@@ -49,8 +49,7 @@ namespace SFC.Canteen.ViewModels
             get => _AddProduct;
             set
             {
-                if(value == _AddProduct)
-                    return;
+                if(value == _AddProduct) return;
                 _AddProduct = value;
                 OnPropertyChanged(nameof(AddProduct));
             }
@@ -176,7 +175,7 @@ namespace SFC.Canteen.ViewModels
             Code = "";
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(Change));
-        },d=>AddProduct!=null && AddProduct.Quantity>=Quantity && AddProduct.Price*Quantity+TotalAmount<=Customer.Credits));
+        },d=>Customer!=null && AddProduct!=null && AddProduct.Quantity>=Quantity && AddProduct.Price*Quantity+TotalAmount<=Customer.Credits));
 
         private ICommand _checkoutCommand;
 

@@ -30,6 +30,7 @@
                   AutoGenerateColumns="False"
                   Grid.IsSharedSizeScope="True" SelectionMode="Single"
                   CanUserAddRows="False"
+                  ClipboardCopyMode="None"
                   HeadersVisibility="Column"
                   CanUserDeleteRows="False">
             <DataGrid.ItemContainerStyle>

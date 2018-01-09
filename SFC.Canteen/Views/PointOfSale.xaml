@@ -87,6 +87,7 @@
                   Grid.IsSharedSizeScope="True"
                   CanUserAddRows="False"
                   IsReadOnly="True"
+                  ClipboardCopyMode="None"
                   CanUserSortColumns="False"
                   HeadersVisibility="Column"
                   CanUserDeleteRows="False">

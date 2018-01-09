@@ -28,6 +28,7 @@
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Employees}"
                   AutoGenerateColumns="False"
+                  ClipboardCopyMode="None"
                   Grid.IsSharedSizeScope="True"
                   CanUserAddRows="False" SelectionMode="Single"
                   HeadersVisibility="Column"
