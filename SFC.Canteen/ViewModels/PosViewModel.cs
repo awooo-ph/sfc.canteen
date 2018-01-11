@@ -160,7 +160,7 @@ namespace SFC.Canteen.ViewModels
 
         private ICommand _addProductCommand;
 
-        public ICommand AddProductCommand => _addProductCommand ?? (_addProductCommand = new DelegateCommand(d =>
+        public ICommand AddProductCommand => _addProductCommand ?? (_addProductCommand = new DelegateCommand<Product>(d =>
         {
             var item = Items.FirstOrDefault(x => x.ProductId == AddProduct.Id);
             if (item == null)
@@ -175,7 +175,14 @@ namespace SFC.Canteen.ViewModels
             Code = "";
             OnPropertyChanged(nameof(TotalAmount));
             OnPropertyChanged(nameof(Change));
-        },d=>Customer!=null && AddProduct!=null && AddProduct.Quantity>=Quantity && AddProduct.Price*Quantity+TotalAmount<=Customer.Credits));
+        },d=>
+        {
+            if (d == null) d = AddProduct;
+            return Customer != null && d != null &&
+                                                            d.Quantity >= Quantity &&
+                                                            d.Price * Quantity + TotalAmount <=
+                                                            Customer.Credits;
+        }));
 
         private ICommand _checkoutCommand;
 
@@ -200,8 +207,20 @@ namespace SFC.Canteen.ViewModels
                 saleItem.SaleId = sale.Id;
                 saleItem.Product.Update(nameof(Product.Quantity),saleItem.Product.Quantity - saleItem.Quantity);
                 saleItem.Save();
+                ProductLog.Add(saleItem.ProductId,
+                    $"{Customer.Fullname} bought {saleItem.Quantity:#,##0.00} for Php {saleItem.Amount:#,##0.00}. REF#{sale.Id}");
             }
-
+            var msg = "";
+            if (Items.Count == 1)
+            {
+                var item = Items.FirstOrDefault();
+                msg = $"Bought {item.Quantity} {item.Product.Description} for {item.Amount:#,##0.00}. REF#{sale.Id}";
+            }
+            else
+            {
+                msg = $"Bought {Items.Count} items for {sale.Amount:#,##0.00}. REF#{sale.Id}";
+            }
+            CustomerLog.Add(Customer.Id,msg);
             Customer.Update(nameof(Customer.Credits),Customer.Credits-TotalAmount);
             Items.Clear();
             Customer = null;
