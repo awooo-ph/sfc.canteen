@@ -46,6 +46,9 @@
                 <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}"
                           CommandParameter="{Binding Employees/}"
                           Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
+                <MenuItem Header="_Print Logs..." Command="{Binding PrintProductLogCommand}"
+                          CommandParameter="{Binding Products/}"
+                          Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
                 <Separator />
                 <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SFC.Canteen.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
+             xmlns:converters="clr-namespace:SFC.Canteen.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -13,18 +14,31 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="147" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        
         <StackPanel Orientation="Horizontal" Margin="10">
             <TextBlock Text="Search: "/>
             <TextBox Text="{Binding ProductsKeyword,UpdateSourceTrigger=PropertyChanged}"
                      Width="174"/>
         </StackPanel>
-        <Button Grid.Row="0" HorizontalAlignment="Right" Margin="10" Command="{Binding NewProductCommand}">
-            <StackPanel Orientation="Horizontal">
-                <materialDesign:PackIcon Kind="Plus"/>
-                <TextBlock Text=" New Product"/>
-            </StackPanel>
-        </Button>
+        <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal"
+                    Grid.ColumnSpan="2">
+            <Button Margin="10" Command="{Binding NewProductCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Plus" />
+                    <TextBlock Text=" New Student" />
+                </StackPanel>
+            </Button>
+            <ToggleButton HorizontalAlignment="Right" Margin="10" x:Name="ToggleButton">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="History" />
+                    <TextBlock Text=" Activity Log" />
+                </StackPanel>
+            </ToggleButton>
+        </StackPanel>
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Products}"
                   AutoGenerateColumns="False"
@@ -77,5 +91,24 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Grid Grid.Row="1" Grid.Column="1"
+              Visibility="{Binding ElementName=ToggleButton,Path=IsChecked, Converter={converters:BooleanToVisibility},UpdateSourceTrigger=PropertyChanged}">
+            <GroupBox Header="Activity Log" Margin="10 0 0 0">
+                <DataGrid ItemsSource="{Binding Products/Logs}" IsReadOnly="True"
+                          ClipboardCopyMode="None"
+                          HeadersVisibility="Column"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Time,StringFormat=g}" Header="Time" />
+                        <DataGridTextColumn Binding="{Binding Message}" Header="Activity" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+
+        <GridSplitter Grid.Column="0" Grid.Row="1" Width="10" VerticalAlignment="Stretch"
+                      Margin="0 0 -10 0"
+                      HorizontalAlignment="Right" IsHitTestVisible="{Binding ElementName=ToggleButton,Path=IsChecked}" />
     </Grid>
 </UserControl>

@@ -324,7 +324,11 @@ namespace SFC.Canteen.ViewModels
                     }
                     if (qty <= 0) return;
                     product.Update(nameof(product.Quantity), product.Quantity + qty);
-                    ProductLog.Add(product.Id, $"{qty} new stocks were added.");
+                    if (qty == 1)
+                    {
+                        ProductLog.Add(product.Id, "New item added.");
+                    }
+                    ProductLog.Add(product.Id, $"{qty} stocks were added.");
                 }
                 break;
             }
@@ -482,8 +486,7 @@ namespace SFC.Canteen.ViewModels
             }
             Print(temp);
         }
-
-
+        
         private static void Print(string path)
         {
             var info = new ProcessStartInfo(path);
@@ -492,24 +495,37 @@ namespace SFC.Canteen.ViewModels
             info.UseShellExecute = true;
             info.Verb = "PrintTo";
             Process.Start(info);
-
         }
+
+        private ICommand _printProductLogCommand;
+
+        public ICommand PrintProductLogCommand =>
+            _printProductLogCommand ?? (_printProductLogCommand = new DelegateCommand<Product>(
+                d =>
+                {
+                    PrintLog(d.Code, d.Description, d.Logs.SourceCollection.Cast<ILog>());
+                },d=> d!=null && d.Logs.Count>0));
 
         private ICommand _printLogCommand;
 
         public ICommand PrintLogCommand => _printLogCommand ?? (_printLogCommand = new DelegateCommand<Customer>(d =>
         {
+            PrintLog(d.RFID,d.Fullname,d.Logs.SourceCollection.Cast<ILog>());
+        },d=>d!=null && d?.Logs.Count>0));
+
+        private void PrintLog(string id, string name, IEnumerable<ILog> logs)
+        {
             if (!Directory.Exists("Temp"))
                 Directory.CreateDirectory("Temp");
-            
-            var temp = Path.Combine("Temp", $"Activity Log [{d.RFID}].docx");
+
+            var temp = Path.Combine("Temp", $"Activity Log [{id}].docx");
             using (var doc = DocX.Load($@"Templates\CustomerLog.docx"))
             {
-                doc.ReplaceText("[RFID]", d.RFID);
-                doc.ReplaceText("[NAME]",d.Fullname);
+                doc.ReplaceText("[RFID]", id);
+                doc.ReplaceText("[NAME]", name);
                 var tbl = doc.Tables.First();
 
-                foreach (CustomerLog item in d.Logs)
+                foreach (var item in logs)
                 {
                     var r = tbl.InsertRow();
                     var p = r.Cells[0].Paragraphs.First().Append(item.Time.ToString("g"));
@@ -519,7 +535,7 @@ namespace SFC.Canteen.ViewModels
                     p = r.Cells[1].Paragraphs.First().Append(item.Message);
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.left;
-                    
+
                 }
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
                     System.Drawing.Color.Black);
@@ -533,6 +549,6 @@ namespace SFC.Canteen.ViewModels
                 doc.SaveAs(temp);
             }
             Print(temp);
-        },d=>d!=null && d?.Logs.Count>0));
+        }
     }
 }
