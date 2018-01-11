@@ -494,6 +494,45 @@ namespace SFC.Canteen.ViewModels
             Process.Start(info);
 
         }
-        
+
+        private ICommand _printLogCommand;
+
+        public ICommand PrintLogCommand => _printLogCommand ?? (_printLogCommand = new DelegateCommand<Customer>(d =>
+        {
+            if (!Directory.Exists("Temp"))
+                Directory.CreateDirectory("Temp");
+            
+            var temp = Path.Combine("Temp", $"Activity Log [{d.RFID}].docx");
+            using (var doc = DocX.Load($@"Templates\CustomerLog.docx"))
+            {
+                doc.ReplaceText("[RFID]", d.RFID);
+                doc.ReplaceText("[NAME]",d.Fullname);
+                var tbl = doc.Tables.First();
+
+                foreach (CustomerLog item in d.Logs)
+                {
+                    var r = tbl.InsertRow();
+                    var p = r.Cells[0].Paragraphs.First().Append(item.Time.ToString("g"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.center;
+
+                    p = r.Cells[1].Paragraphs.First().Append(item.Message);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.left;
+                    
+                }
+                var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
+                    System.Drawing.Color.Black);
+                tbl.SetBorder(TableBorderType.Bottom, border);
+                tbl.SetBorder(TableBorderType.Left, border);
+                tbl.SetBorder(TableBorderType.Right, border);
+                tbl.SetBorder(TableBorderType.Top, border);
+                tbl.SetBorder(TableBorderType.InsideV, border);
+                tbl.SetBorder(TableBorderType.InsideH, border);
+                File.Delete(temp);
+                doc.SaveAs(temp);
+            }
+            Print(temp);
+        },d=>d!=null && d?.Logs.Count>0));
     }
 }

@@ -40,11 +40,16 @@
                     <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
                 </MenuItem>
                 <MenuItem Header="_Print..." Command="{Binding PrintCommand}"/>
+                <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}" 
+                          CommandParameter="{Binding Students/}"
+                          Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
+                <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}"
+                          CommandParameter="{Binding Employees/}"
+                          Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
                 <Separator />
                 <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
-                
                 <MenuItem Header="Add credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
                 <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
                           CommandParameter="{Binding Students/}" InputGestureText="F4" />
