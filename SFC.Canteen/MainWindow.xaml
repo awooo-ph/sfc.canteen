@@ -20,7 +20,11 @@
                     CommandParameter="{x:Static vm:MainViewModel.PRODUCTS}" />
         <KeyBinding Key="D4" Modifiers="Control" Command="{Binding ShowTabCommand}"
                     CommandParameter="{x:Static vm:MainViewModel.POS}" />
-        
+        <KeyBinding Key="P" Modifiers="Control" Command="{Binding PrintCommand}"/>
+        <KeyBinding Key="F4" Command="{Binding StartSalesCommand}"/>
+        <KeyBinding Key="F3" Command="{Binding AddToCartCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding RunExternalCommand}"
+                    CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -35,14 +39,15 @@
                     <MenuItem Header="_Employee" Command="{Binding NewEmployeeCommand}" />
                     <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
                 </MenuItem>
-                <MenuItem Header="_Print..."/>
+                <MenuItem Header="_Print..." Command="{Binding PrintCommand}"/>
                 <Separator />
                 <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
-                <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
+                
+                <MenuItem Header="Add credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
                 <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
-                          CommandParameter="{Binding Students/}" />
+                          CommandParameter="{Binding Students/}" InputGestureText="F4" />
                 <Separator/>
                 <MenuItem Header="Delete" Command="{Binding Students/DeleteCommand}"/>
             </MenuItem>
@@ -51,13 +56,14 @@
                 <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}"
                           CommandParameter="{Binding Employees/}" />
                 <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
-                          CommandParameter="{Binding Employees/}" />
+                          CommandParameter="{Binding Employees/}" InputGestureText="F4" />
                 <Separator />
                 <MenuItem Header="Delete" Command="{Binding Employees/DeleteCommand}"/>
             </MenuItem>
             <MenuItem Header="_Edit"
                       Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
                 <MenuItem Header="Add to Cart" Command="{Binding AddToCartCommand}"
+                          InputGestureText="F3" 
                           CommandParameter="{Binding Products/}" />
                 <MenuItem Header="Add Stocks" Command="{Binding AddStocksCommand}"
                           CommandParameter="{Binding Products/}" />
@@ -94,8 +100,8 @@
                 <MenuItem Header="_Options..." Command="{Binding OptionsCommand}"/>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="View Source" Command="{Binding ShowSourceCommand}"/>
-                <MenuItem Header="User Guide" Command="{Binding ShowUserGuideCommand}"/>
+                <MenuItem Header="View Source" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen"/>
+                <MenuItem Header="User Guide" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki"/>
                 <Separator/>
                 <MenuItem Header="About SFC Canteen" Command="{Binding ShowAboutCommand}"/>
             </MenuItem>

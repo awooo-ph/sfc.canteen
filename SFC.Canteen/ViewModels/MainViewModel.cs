@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
 using SFC.Canteen.Models;
 using SFC.Canteen.Views;
+using Xceed.Words.NET;
 
 namespace SFC.Canteen.ViewModels
 {
@@ -222,7 +226,7 @@ namespace SFC.Canteen.ViewModels
             if ((new TopUp() {DataContext = topVm}.ShowDialog() ?? false) && topVm.Credits>0 && topVm.Customer!=null)
             {
                 topVm.Customer.Update(nameof(topVm.Customer.Credits), topVm.Customer.Credits+topVm.Credits);
-                CustomerLog.Add(topVm.Customer.Id,$"Added {topVm.Credits:#,##0.00} credits.");
+                CustomerLog.Add(topVm.Customer.Id,$"Deposited Php {topVm.Credits:#,##0.00}.");
             }
         },d=>d!=null));
 
@@ -330,6 +334,12 @@ namespace SFC.Canteen.ViewModels
 
         public ICommand StartSalesCommand => _StartSalesCommand ?? (_StartSalesCommand = new DelegateCommand<Customer>(c =>
         {
+            if (c == null)
+            {
+                c = (Customer) (SelectedTab ==STUDENTS ? Students.CurrentItem : Employees.CurrentItem);
+            }
+            if (c == null) return;
+            
             PosViewModel.Customer = c;
             SelectedTab = POS;
         },d=> !PosViewModel.IsTransactionStarted));
@@ -352,14 +362,138 @@ namespace SFC.Canteen.ViewModels
 
         public ICommand AddToCartCommand => _addToCartCommand ?? (_addToCartCommand = new DelegateCommand<Product>(d =>
         {
+            if (d == null)
+            {
+                if (SelectedTab != PRODUCTS) return;
+                d = Products.CurrentItem as Product;
+            }
             PosViewModel.AddProduct = d;
             PosViewModel.Quantity = 1;
             if(PosViewModel.AddProductCommand.CanExecute(null))
                 PosViewModel.AddProductCommand.Execute(null);
+            MessageBox.Show($"1 {d.Description} has been added to cart.");
         },d=>
         {
             if (!PosViewModel.IsTransactionStarted) return false;
-            return PosViewModel.AddProductCommand.CanExecute(null);
+            return PosViewModel.AddProductCommand.CanExecute(Products.CurrentItem);
         }));
+
+        private ICommand _printCommand;
+
+        public ICommand PrintCommand => _printCommand ?? (_printCommand = new DelegateCommand(d =>
+        {
+            if (SelectedTab == STUDENTS)
+            {
+                PrintCustomers(Customer.Cache.Where(x => x.IsStudent).ToList());
+            } 
+            else if (SelectedTab == EMPLOYEES)
+            {
+                PrintCustomers(Customer.Cache.Where(x => !x.IsStudent).ToList());
+            }
+            else if (SelectedTab == PRODUCTS)
+            {
+                PrintProducts();
+            }
+        }, d => SelectedTab != POS));
+
+        private void PrintProducts()
+        {
+            if (!Directory.Exists("Temp"))
+                Directory.CreateDirectory("Temp");
+            
+            var temp = Path.Combine("Temp", $"Products [{DateTime.Now:d-MMM-yyyy}].docx");
+            using (var doc = DocX.Load($@"Templates\Products.docx"))
+            {
+                var tbl = doc.Tables.First();
+                var items = Product.Cache.ToList();
+                foreach (var item in items)
+                {
+                    var r = tbl.InsertRow();
+                    var p = r.Cells[0].Paragraphs.First().Append(item.Code);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.center;
+
+                    p = r.Cells[1].Paragraphs.First().Append(item.Description);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.left;
+
+                    p = r.Cells[2].Paragraphs.First().Append(item.Price.ToString("#,##0.00"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+
+                    p = r.Cells[3].Paragraphs.First().Append(item.Quantity.ToString("#,##0.00"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+                }
+                var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
+                    System.Drawing.Color.Black);
+                tbl.SetBorder(TableBorderType.Bottom, border);
+                tbl.SetBorder(TableBorderType.Left, border);
+                tbl.SetBorder(TableBorderType.Right, border);
+                tbl.SetBorder(TableBorderType.Top, border);
+                tbl.SetBorder(TableBorderType.InsideV, border);
+                tbl.SetBorder(TableBorderType.InsideH, border);
+                File.Delete(temp);
+                doc.SaveAs(temp);
+            }
+            Print(temp);
+        }
+
+        private void PrintCustomers(List<Customer> customers)
+        {
+            if(!Directory.Exists("Temp"))
+                Directory.CreateDirectory("Temp");
+            
+            var students = customers.FirstOrDefault()?.IsStudent ?? false ? "Students" : "Employees";
+            
+            var temp = Path.Combine("Temp", $"{students} [{DateTime.Now:d-MMM-yyyy}].docx");
+            using(var doc = DocX.Load($@"Templates\{students}.docx"))
+            {
+                var tbl = doc.Tables.First();
+
+                foreach(var item in customers)
+                {
+                    var r = tbl.InsertRow();
+                    var p = r.Cells[0].Paragraphs.First().Append(item.RFID);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.center;
+
+                    p = r.Cells[1].Paragraphs.First().Append(item.Fullname);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.left;
+
+                    r.Cells[2].Paragraphs.First()
+                        .Append(item.Course)
+                        .LineSpacingAfter = 0;
+
+                    p = r.Cells[3].Paragraphs.First().Append(item.Credits.ToString("#,##0.00"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+                }
+                var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0, System.Drawing.Color.Black);
+                tbl.SetBorder(TableBorderType.Bottom, border);
+                tbl.SetBorder(TableBorderType.Left, border);
+                tbl.SetBorder(TableBorderType.Right, border);
+                tbl.SetBorder(TableBorderType.Top, border);
+                tbl.SetBorder(TableBorderType.InsideV, border);
+                tbl.SetBorder(TableBorderType.InsideH, border);
+                File.Delete(temp);
+                doc.SaveAs(temp);
+            }
+            Print(temp);
+        }
+
+
+        private static void Print(string path)
+        {
+            var info = new ProcessStartInfo(path);
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+            info.UseShellExecute = true;
+            info.Verb = "PrintTo";
+            Process.Start(info);
+
+        }
+        
     }
 }
