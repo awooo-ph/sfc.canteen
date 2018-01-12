@@ -550,5 +550,62 @@ namespace SFC.Canteen.ViewModels
             }
             Print(temp);
         }
+
+        private User _CurrentUser;
+
+        public User CurrentUser
+        {
+            get => _CurrentUser;
+            set
+            {
+                if(value == _CurrentUser)
+                    return;
+                _CurrentUser = value;
+                OnPropertyChanged(nameof(CurrentUser));
+            }
+        }
+
+        public void Login(string username, string password)
+        {
+            var user = User.Cache.FirstOrDefault(x => x.Username.ToLower() == username.ToLower());
+            if (user == null && User.Cache.Count == 0)
+            {
+                user = new User()
+                {
+                    Username = username,
+                    Password = password,
+                    StudentsAdmin = true,
+                    EmployeesAdmin = true,
+                    ProductsAdmin = true,
+                    UsersAdmin = true,
+                    SalesAdmin = true,
+                };
+                user.Save();
+            }
+
+            if (user?.Password!=password)
+            {
+                MessageBox.Show("Invalid username/password!");
+                return;
+            }
+            CurrentUser = user;
+        }
+
+        private ICommand _logoutCommand;
+
+        public ICommand LogoutCommand => _logoutCommand ?? (_logoutCommand = new DelegateCommand(d =>
+        {
+            CurrentUser = null;
+            ((MainWindow) Application.Current.MainWindow).ShowLogin();
+        }));
+
+        private ICommand _changePasswordCommand;
+
+        public ICommand ChangePasswordCommand =>
+            _changePasswordCommand ?? (_changePasswordCommand = new DelegateCommand(
+                d =>
+                {
+                    new ChangePasswordView().ShowDialog();
+                },d=>CurrentUser!=null));
     }
 }

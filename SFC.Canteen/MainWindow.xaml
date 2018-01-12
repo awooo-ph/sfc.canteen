@@ -26,7 +26,7 @@
         <KeyBinding Key="F1" Command="{Binding RunExternalCommand}"
                     CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki" />
     </Window.InputBindings>
-    <Grid>
+    <Grid x:Name="Grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -39,6 +39,7 @@
                     <MenuItem Header="_Employee" Command="{Binding NewEmployeeCommand}" />
                     <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
                 </MenuItem>
+                <Separator/>
                 <MenuItem Header="_Print..." Command="{Binding PrintCommand}"/>
                 <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}" 
                           CommandParameter="{Binding Students/}"
@@ -50,6 +51,9 @@
                           CommandParameter="{Binding Products/}"
                           Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
                 <Separator />
+                <MenuItem Header="Change Password" Command="{Binding ChangePasswordCommand}"/>
+                <MenuItem Header="Logout" Command="{Binding LogoutCommand}" />
+                <Separator/>
                 <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
@@ -80,25 +84,31 @@
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Students" 
+                          Visibility="{Binding CurrentUser.StudentsAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon School}"
                           InputGestureText="Ctrl+1"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=StudentsTab,Path=IsSelected,Mode=TwoWay}"/>
                 <MenuItem Header="_Employees"
                           Icon="{md:PackIcon Account}"
+                          Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}"
                           InputGestureText="Ctrl+2"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=EmployeesTab,Path=IsSelected,Mode=TwoWay}" />
                 <MenuItem Header="_Products"
+                          Visibility="{Binding CurrentUser.ProductsAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon Food}"
                           InputGestureText="Ctrl+3"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=ProductsTab,Path=IsSelected,Mode=TwoWay}" />
                 <MenuItem Header="P_oint-of-Sale"
+                          Visibility="{Binding CurrentUser.SalesAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon BarcodeScan}"
                           InputGestureText="Ctrl+4"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=POSTab,Path=IsSelected,Mode=TwoWay}" />
+                <MenuItem Header="Users" Icon="{md:PackIcon AccountMultiple}"
+                          Command="{Binding ShowUsersCommand}"/>
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Header="_Calculator" Command="{Binding RunExternalCommand}" CommandParameter="calc"/>
