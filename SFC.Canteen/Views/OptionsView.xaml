@@ -1,0 +1,60 @@
+﻿<Window x:Class="SFC.Canteen.Views.OptionsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SFC.Canteen.Views"
+        xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
+        xmlns:converters="clr-namespace:SFC.Canteen.Converters"
+        xmlns:models="clr-namespace:SFC.Canteen.Models;assembly=SFC.Canteen.Data"
+        mc:Ignorable="d"
+        Title="Options" 
+        Width="444"
+        Height="333"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <TabControl x:Name="Tab">
+        <TabItem Header="General"/>
+        <TabItem Header="User Accounts" Visibility="{Binding Source={x:Static viewModels:MainViewModel.Instance},
+            Path=CurrentUser.UsersAdmin,Converter={converters:BooleanToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                <ListBox Width="147" ItemsSource="{Binding Source={x:Static models:User.Cache}}"
+                         x:Name="ListBox"
+                         DisplayMemberPath="Username"
+                         Margin="10"/>
+                    <Button Margin="10" Content="ADD USER" Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},
+                        Path=AddUserCommand}"
+                            Grid.Row="1"/>
+                </Grid>
+
+                <StackPanel Grid.Column="1"
+                      DataContext="{Binding ElementName=ListBox,Path=SelectedItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Username: " Margin="10"/>
+                        <TextBox Text="{Binding Username,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Margin="10" Width="174"/>
+                    </StackPanel>
+                    <CheckBox Content="Students" IsChecked="{Binding StudentsAdmin}" Margin="10"/>
+                    <CheckBox Content="Employees" IsChecked="{Binding EmployeesAdmin}" Margin="10" />
+                    <CheckBox Content="Produtcs" IsChecked="{Binding ProductsAdmin}" Margin="10" />
+                    <CheckBox Content="Point of Sale" IsChecked="{Binding SalesAdmin}" Margin="10" />
+                    <CheckBox Content="Users" IsChecked="{Binding UsersAdmin}" Margin="10" />
+                    
+                </StackPanel>
+
+                <Button HorizontalAlignment="Right" Content=" SAVE " Command="{Binding SaveCommand}"
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        Margin="10" />
+            </Grid>
+        </TabItem>
+</TabControl>
+</Window>

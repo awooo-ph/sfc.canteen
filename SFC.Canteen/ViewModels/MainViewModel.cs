@@ -607,5 +607,33 @@ namespace SFC.Canteen.ViewModels
                 {
                     new ChangePasswordView().ShowDialog();
                 },d=>CurrentUser!=null));
+
+        private ICommand _showUsersCommand;
+
+        public ICommand ShowUsersCommand => _showUsersCommand ?? (_showUsersCommand = new DelegateCommand(d =>
+        {
+            ShowOptions(1);
+        },d=>CurrentUser?.UsersAdmin??false));
+
+        private void ShowOptions(int tab)
+        {
+            var dlg = new OptionsView();
+            dlg.Tab.SelectedIndex = tab;
+            dlg.ShowDialog();
+        }
+
+        private ICommand _optionsCommand;
+
+        public ICommand OptionsCommand => _optionsCommand ?? (_optionsCommand = new DelegateCommand(d =>
+        {
+            ShowOptions(0);
+        }));
+
+        private ICommand _addUserCommand;
+
+        public ICommand AddUserCommand => _addUserCommand ?? (_addUserCommand = new DelegateCommand(d =>
+        {
+            User.Cache.Add(new User(){Username = "NEW USER"});
+        },d=>CurrentUser?.UsersAdmin??false));
     }
 }
