@@ -582,8 +582,13 @@ namespace SFC.Canteen.ViewModels
                 };
                 user.Save();
             }
-
-            if (user?.Password!=password)
+            if (user == null)
+            {
+                MessageBox.Show("Invalid username/password!");
+                return;
+            }
+            if(string.IsNullOrEmpty(user.Password)) user.Update(nameof(User.Password),password);
+            if (user.Password!=password)
             {
                 MessageBox.Show("Invalid username/password!");
                 return;

@@ -126,7 +126,8 @@
         </Menu>
         <TabControl Grid.Row="1" VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedTab}"
                     Focusable="False" IsTabStop="False">
-            <TabItem x:Name="StudentsTab">
+            <TabItem x:Name="StudentsTab"
+                     Visibility="{Binding CurrentUser.StudentsAdmin,Converter={converters:BooleanToVisibility}}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <md:PackIcon Kind="School"/>
@@ -136,7 +137,8 @@
                 <views:Students/>
             </TabItem>
 
-            <TabItem x:Name="EmployeesTab">
+            <TabItem x:Name="EmployeesTab"
+                     Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <md:PackIcon Kind="Account" />
@@ -146,7 +148,8 @@
                 <views:Employees/>
             </TabItem>
 
-            <TabItem x:Name="ProductsTab">
+            <TabItem x:Name="ProductsTab"
+                     Visibility="{Binding CurrentUser.ProductsAdmin,Converter={converters:BooleanToVisibility}}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <md:PackIcon Kind="Food" />
@@ -156,7 +159,8 @@
                 <views:Products/>
             </TabItem>
 
-            <TabItem x:Name="POSTab">
+            <TabItem x:Name="POSTab"
+                     Visibility="{Binding CurrentUser.SalesAdmin,Converter={converters:BooleanToVisibility}}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <md:PackIcon Kind="BarcodeScan" />

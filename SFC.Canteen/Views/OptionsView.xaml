@@ -31,9 +31,16 @@
                          x:Name="ListBox"
                          DisplayMemberPath="Username"
                          Margin="10"/>
-                    <Button Margin="10" Content="ADD USER" Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},
+                    <UniformGrid Grid.Row="1" Rows="1">
+                        <Button Margin="10" Content="DELETE"
+                                Command="{Binding ElementName=ListBox,Path=SelectedItem.DeleteCommand}"
+                                Grid.Row="1" />
+                        <Button Margin="10" Content="ADD USER"
+                                Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},
                         Path=AddUserCommand}"
-                            Grid.Row="1"/>
+                                Grid.Row="1" />
+                    </UniformGrid>
+                    
                 </Grid>
 
                 <StackPanel Grid.Column="1"
@@ -51,6 +58,7 @@
                 </StackPanel>
 
                 <Button HorizontalAlignment="Right" Content=" SAVE " Command="{Binding SaveCommand}"
+                        DataContext="{Binding ElementName=ListBox,Path=SelectedItem}"
                         Grid.Column="1"
                         VerticalAlignment="Bottom"
                         Margin="10" />
