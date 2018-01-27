@@ -11,38 +11,44 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
+
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="147" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="Search: "/>
-            <TextBox Text="{Binding ProductsKeyword,UpdateSourceTrigger=PropertyChanged}"
-                     Width="174"/>
-        </StackPanel>
-        <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal"
-                    Grid.ColumnSpan="2">
-            <Button Margin="10" Command="{Binding NewProductCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Plus" />
-                    <TextBlock Text=" New Student" />
-                </StackPanel>
-            </Button>
-            <ToggleButton HorizontalAlignment="Right" Margin="10" x:Name="ToggleButton">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="History" />
-                    <TextBlock Text=" Activity Log" />
-                </StackPanel>
-            </ToggleButton>
-        </StackPanel>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Products}"
+
+        <materialDesign:Card Grid.Row="1" Margin="7" HorizontalAlignment="Left" UniformCornerRadius="7">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding ProductsKeyword,UpdateSourceTrigger=PropertyChanged}"
+                         Width="174">
+                    <materialDesign:HintAssist.Hint>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Magnify" VerticalAlignment="Center" />
+                            <TextBlock Text=" SEARCH" />
+                        </StackPanel>
+                    </materialDesign:HintAssist.Hint>
+                </TextBox>
+                <Button Command="{Binding NewProductCommand}"
+                        Style="{StaticResource MaterialDesignFlatButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FoodVariant" VerticalAlignment="Center" />
+                        <TextBlock Text=" ADD ITEM" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </materialDesign:Card>
+        
+        
+
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Products}"
                   AutoGenerateColumns="False"
                   Grid.IsSharedSizeScope="True" SelectionMode="Single"
+                  Grid.ColumnSpan="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:BooleanToObject 1,2}}"
                   CanUserAddRows="False"
                   ClipboardCopyMode="None"
                   HeadersVisibility="Column"
@@ -92,9 +98,46 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="1" Grid.Column="1"
-              Visibility="{Binding ElementName=ToggleButton,Path=IsChecked, Converter={converters:BooleanToVisibility},UpdateSourceTrigger=PropertyChanged}">
-            <GroupBox Header="Activity Log" Margin="10 0 0 0">
+        <ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
+                 Visibility="{Binding ElementName=ToggleButton,Converter={converters:BooleanToVisibility}}"
+                 Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Right"
+                 Margin="4">
+            <ListBoxItem x:Name="ToggleButton">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CalendarClock" VerticalAlignment="Center" />
+                    <TextBlock Text=" View Log"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ListBoxItem>
+        </ListBox>
+        
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+              Width="147"
+              Visibility="{Binding ElementName=ToggleButton,Path=IsSelected, Converter={converters:BooleanToVisibility},UpdateSourceTrigger=PropertyChanged}">
+            <GroupBox Margin="10 0 0 0" Padding="1">
+                <GroupBox.Header>
+                    <Grid Margin="7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton Style="{StaticResource MaterialDesignActionLightToggleButton}"
+                                      Grid.Column="2"
+                                      Content="{materialDesign:PackIcon ChevronRight}"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:Inverter}}" />
+                        <TextBlock Text="ACTIVITY LOG"
+                                   Grid.Column="1"
+                                   Margin="7 0"
+                                   Foreground="White"
+                                   VerticalAlignment="Center" />
+                        <materialDesign:PackIcon Kind="CalendarClock" Grid.Column="0"
+                                     Height="24" Width="24"
+                                     VerticalAlignment="Center"
+                                     Foreground="White" />
+                    </Grid>
+                </GroupBox.Header>
                 <DataGrid ItemsSource="{Binding Products/Logs}" IsReadOnly="True"
                           ClipboardCopyMode="None"
                           HeadersVisibility="Column"
@@ -107,8 +150,10 @@
             </GroupBox>
         </Grid>
 
-        <GridSplitter Grid.Column="0" Grid.Row="1" Width="10" VerticalAlignment="Stretch"
-                      Margin="0 0 -10 0"
-                      HorizontalAlignment="Right" IsHitTestVisible="{Binding ElementName=ToggleButton,Path=IsChecked}" />
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="2" VerticalAlignment="Stretch"
+                      Margin="4 0 0 0"
+                      HorizontalAlignment="Left"
+                      Visibility="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
     </Grid>
 </UserControl>
+
