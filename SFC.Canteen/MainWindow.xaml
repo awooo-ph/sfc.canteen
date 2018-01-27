@@ -10,186 +10,223 @@
         xmlns:views="clr-namespace:SFC.Canteen.Views"
         xmlns:converters="clr-namespace:SFC.Canteen.Converters"
         DataContext="{vm:MainViewModel}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        SnapsToDevicePixels="True"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"     
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        MinWidth="666" MinHeight="333"
+        MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
         Title="SFC Canteen" Height="555" Width="777">
-    <Window.InputBindings>
-        <KeyBinding Key="D1" Modifiers="Control" Command="{Binding ShowTabCommand}" CommandParameter="{x:Static vm:MainViewModel.STUDENTS}"/>
-        <KeyBinding Key="D2" Modifiers="Control" Command="{Binding ShowTabCommand}"
+  <Window.InputBindings>
+    <KeyBinding Key="D1" Modifiers="Control" Command="{Binding ShowTabCommand}" CommandParameter="{x:Static vm:MainViewModel.STUDENTS}"/>
+    <KeyBinding Key="D2" Modifiers="Control" Command="{Binding ShowTabCommand}"
                     CommandParameter="{x:Static vm:MainViewModel.EMPLOYEES}" />
-        <KeyBinding Key="D3" Modifiers="Control" Command="{Binding ShowTabCommand}"
+    <KeyBinding Key="D3" Modifiers="Control" Command="{Binding ShowTabCommand}"
                     CommandParameter="{x:Static vm:MainViewModel.PRODUCTS}" />
-        <KeyBinding Key="D4" Modifiers="Control" Command="{Binding ShowTabCommand}"
+    <KeyBinding Key="D4" Modifiers="Control" Command="{Binding ShowTabCommand}"
                     CommandParameter="{x:Static vm:MainViewModel.POS}" />
-        <KeyBinding Key="P" Modifiers="Control" Command="{Binding PrintCommand}"/>
-        <KeyBinding Key="F4" Command="{Binding StartSalesCommand}"/>
-        <KeyBinding Key="F3" Command="{Binding AddToCartCommand}"/>
-        <KeyBinding Key="F1" Command="{Binding RunExternalCommand}"
+    <KeyBinding Key="P" Modifiers="Control" Command="{Binding PrintCommand}"/>
+    <KeyBinding Key="F4" Command="{Binding StartSalesCommand}"/>
+    <KeyBinding Key="F3" Command="{Binding AddToCartCommand}"/>
+    <KeyBinding Key="F1" Command="{Binding RunExternalCommand}"
                     CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki" />
-    </Window.InputBindings>
-    <Grid x:Name="Grid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="_File">
-                <MenuItem Header="New">
-                    <MenuItem Header="_Student" Command="{Binding NewStudentCommand}" />
-                    <MenuItem Header="_Employee" Command="{Binding NewEmployeeCommand}" />
-                    <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
-                </MenuItem>
-                <Separator/>
-                <MenuItem Header="_Print..." Command="{Binding PrintCommand}"/>
-                <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}" 
+  </Window.InputBindings>
+  <Grid x:Name="Grid">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Menu HorizontalAlignment="Left">
+      <MenuItem Header="_File">
+        <MenuItem Header="New">
+          <MenuItem Header="_Student" Command="{Binding NewStudentCommand}" />
+          <MenuItem Header="_Employee" Command="{Binding NewEmployeeCommand}" />
+          <MenuItem Header="_Product" Command="{Binding NewProductCommand}" />
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="_Print..." Command="{Binding PrintCommand}"/>
+        <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}" 
                           CommandParameter="{Binding Students/}"
                           Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
-                <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}"
+        <MenuItem Header="_Print Logs..." Command="{Binding PrintLogCommand}"
                           CommandParameter="{Binding Employees/}"
                           Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
-                <MenuItem Header="_Print Logs..." Command="{Binding PrintProductLogCommand}"
+        <MenuItem Header="_Print Logs..." Command="{Binding PrintProductLogCommand}"
                           CommandParameter="{Binding Products/}"
                           Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}" />
-                <Separator />
-                <MenuItem Header="Change Password" Command="{Binding ChangePasswordCommand}"/>
-                <MenuItem Header="Logout" Command="{Binding LogoutCommand}" />
-                <Separator/>
-                <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
-            </MenuItem>
-            <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
-                <MenuItem Header="Add credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
-                <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
+        <Separator />
+        <MenuItem Header="Change Password" Command="{Binding ChangePasswordCommand}"/>
+        <MenuItem Header="Logout" Command="{Binding LogoutCommand}" />
+        <Separator/>
+        <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Alt+F4"/>
+      </MenuItem>
+      <MenuItem Header="_Edit" Visibility="{Binding ElementName=StudentsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
+        <MenuItem Header="Add credits" ToolTip="Add credits" Command="{Binding TopupCommand}" CommandParameter="{Binding Students/}"/>
+        <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
                           CommandParameter="{Binding Students/}" InputGestureText="F4" />
-                <Separator/>
-                <MenuItem Header="Delete" Command="{Binding Students/DeleteCommand}"/>
-            </MenuItem>
-            <MenuItem Header="_Edit"
+        <Separator/>
+        <MenuItem Header="Delete" Command="{Binding Students/DeleteCommand}"/>
+      </MenuItem>
+      <MenuItem Header="_Edit"
                       Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
-                <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}"
+        <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}"
                           CommandParameter="{Binding Employees/}" />
-                <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
+        <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
                           CommandParameter="{Binding Employees/}" InputGestureText="F4" />
-                <Separator />
-                <MenuItem Header="Delete" Command="{Binding Employees/DeleteCommand}"/>
-            </MenuItem>
-            <MenuItem Header="_Edit"
+        <Separator />
+        <MenuItem Header="Delete" Command="{Binding Employees/DeleteCommand}"/>
+      </MenuItem>
+      <MenuItem Header="_Edit"
                       Visibility="{Binding ElementName=ProductsTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
-                <MenuItem Header="Add to Cart" Command="{Binding AddToCartCommand}"
+        <MenuItem Header="Add to Cart" Command="{Binding AddToCartCommand}"
                           InputGestureText="F3" 
                           CommandParameter="{Binding Products/}" />
-                <MenuItem Header="Add Stocks" Command="{Binding AddStocksCommand}"
+        <MenuItem Header="Add Stocks" Command="{Binding AddStocksCommand}"
                           CommandParameter="{Binding Products/}" />
-                <Separator />
-                <MenuItem Header="Delete" Command="{Binding Products/DeleteCommand}" />
-            </MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Header="_Students" 
+        <Separator />
+        <MenuItem Header="Delete" Command="{Binding Products/DeleteCommand}" />
+      </MenuItem>
+      <MenuItem Header="_View">
+        <MenuItem Header="_Students" 
                           Visibility="{Binding CurrentUser.StudentsAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon School}"
                           InputGestureText="Ctrl+1"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=StudentsTab,Path=IsSelected,Mode=TwoWay}"/>
-                <MenuItem Header="_Employees"
+        <MenuItem Header="_Employees"
                           Icon="{md:PackIcon Account}"
                           Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}"
                           InputGestureText="Ctrl+2"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=EmployeesTab,Path=IsSelected,Mode=TwoWay}" />
-                <MenuItem Header="_Products"
+        <MenuItem Header="_Products"
                           Visibility="{Binding CurrentUser.ProductsAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon Food}"
                           InputGestureText="Ctrl+3"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=ProductsTab,Path=IsSelected,Mode=TwoWay}" />
-                <MenuItem Header="P_oint-of-Sale"
+        <MenuItem Header="P_oint-of-Sale"
                           Visibility="{Binding CurrentUser.SalesAdmin,Converter={converters:BooleanToVisibility}}"
                           Icon="{md:PackIcon BarcodeScan}"
                           InputGestureText="Ctrl+4"
                           IsCheckable="True"
                           IsChecked="{Binding ElementName=POSTab,Path=IsSelected,Mode=TwoWay}" />
-                <MenuItem Header="Users" Icon="{md:PackIcon AccountMultiple}"
+        <MenuItem Header="Users" Icon="{md:PackIcon AccountMultiple}"
                           Command="{Binding ShowUsersCommand}"/>
-            </MenuItem>
-            <MenuItem Header="_Tools">
-                <MenuItem Header="_Calculator" Command="{Binding RunExternalCommand}" CommandParameter="calc"/>
-                <MenuItem Header="_Screen Snip" Command="{Binding RunExternalCommand}" CommandParameter="snippingtool"/>
-                <MenuItem Header="_Notepad" Command="{Binding RunExternalCommand}" CommandParameter="notepad"/>
-                <Separator/>
-                <MenuItem Header="_Options..." Command="{Binding OptionsCommand}"/>
-            </MenuItem>
-            <MenuItem Header="Help">
-                <MenuItem Header="View Source" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen"/>
-                <MenuItem Header="User Guide" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki"/>
-                <Separator/>
-                <MenuItem Header="About SFC Canteen" Command="{Binding ShowAboutCommand}"/>
-            </MenuItem>
-        </Menu>
-        <TabControl Grid.Row="1" VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedTab}"
+      </MenuItem>
+      <MenuItem Header="_Tools">
+        <MenuItem Header="_Calculator" Command="{Binding RunExternalCommand}" CommandParameter="calc"/>
+        <MenuItem Header="_Screen Snip" Command="{Binding RunExternalCommand}" CommandParameter="snippingtool"/>
+        <MenuItem Header="_Notepad" Command="{Binding RunExternalCommand}" CommandParameter="notepad"/>
+        <Separator/>
+        <MenuItem Header="_Options..." Command="{Binding OptionsCommand}"/>
+      </MenuItem>
+      <MenuItem Header="Help">
+        <MenuItem Header="View Source" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen"/>
+        <MenuItem Header="User Guide" Command="{Binding RunExternalCommand}" CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki"/>
+        <Separator/>
+        <MenuItem Header="About SFC Canteen" Command="{Binding ShowAboutCommand}"/>
+      </MenuItem>
+    </Menu>
+    <TabControl Grid.Row="1" VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedTab}"
                     Focusable="False" IsTabStop="False">
-            <TabItem x:Name="StudentsTab"
+      <TabItem x:Name="StudentsTab"
                      Visibility="{Binding CurrentUser.StudentsAdmin,Converter={converters:BooleanToVisibility}}">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <md:PackIcon Kind="School"/>
-                        <TextBlock Text=" Students"/>
-                    </StackPanel>
-                </TabItem.Header>
-                <views:Students/>
-            </TabItem>
+        <TabItem.Header>
+          <StackPanel Orientation="Horizontal">
+            <md:PackIcon Kind="School"/>
+            <TextBlock Text=" Students"/>
+          </StackPanel>
+        </TabItem.Header>
+        <views:Students/>
+      </TabItem>
 
-            <TabItem x:Name="EmployeesTab"
+      <TabItem x:Name="EmployeesTab"
                      Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <md:PackIcon Kind="Account" />
-                        <TextBlock Text=" Employees" />
-                    </StackPanel>
-                </TabItem.Header>
-                <views:Employees/>
-            </TabItem>
+        <TabItem.Header>
+          <StackPanel Orientation="Horizontal">
+            <md:PackIcon Kind="Account" />
+            <TextBlock Text=" Employees" />
+          </StackPanel>
+        </TabItem.Header>
+        <views:Employees/>
+      </TabItem>
 
-            <TabItem x:Name="ProductsTab"
+      <TabItem x:Name="ProductsTab"
                      Visibility="{Binding CurrentUser.ProductsAdmin,Converter={converters:BooleanToVisibility}}">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <md:PackIcon Kind="Food" />
-                        <TextBlock Text=" Products" />
-                    </StackPanel>
-                </TabItem.Header>
-                <views:Products/>
-            </TabItem>
+        <TabItem.Header>
+          <StackPanel Orientation="Horizontal">
+            <md:PackIcon Kind="Food" />
+            <TextBlock Text=" Products" />
+          </StackPanel>
+        </TabItem.Header>
+        <views:Products/>
+      </TabItem>
 
-            <TabItem x:Name="POSTab"
+      <TabItem x:Name="POSTab"
+               ClipToBounds="True"
+               Padding="0"
                      Visibility="{Binding CurrentUser.SalesAdmin,Converter={converters:BooleanToVisibility}}">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <md:PackIcon Kind="BarcodeScan" />
-                        <TextBlock Text=" Point-of-Sale" />
-                    </StackPanel>
-                </TabItem.Header>
-                <views:PointOfSale DataContext="{Binding PosViewModel}"/>
-            </TabItem>
-        </TabControl>
+        <TabItem.Header>
+          <StackPanel Orientation="Horizontal">
+            <md:PackIcon Kind="BarcodeScan" />
+            <TextBlock Text=" Point-of-Sale" />
+          </StackPanel>
+        </TabItem.Header>
+        <views:PointOfSale DataContext="{Binding PosViewModel}"/>
+      </TabItem>
+    </TabControl>
 
-        <StatusBar Grid.Row="2">
-            <StatusBarItem Margin="10 0">
-                <StackPanel Orientation="Horizontal">
-                    <md:PackIcon Kind="School" Margin="0 0 10 0"/>
-                    <TextBlock Text="{Binding Students.Count}"/>
-                </StackPanel>
-            </StatusBarItem>
-            <StatusBarItem Margin="10 0">
-                <StackPanel Orientation="Horizontal">
-                    <md:PackIcon Kind="Account" Margin="0 0 10 0" />
-                    <TextBlock Text="{Binding Employees.Count}" />
-                </StackPanel>
-            </StatusBarItem>
-            <StatusBarItem Margin="10 0">
-                <StackPanel Orientation="Horizontal">
-                    <md:PackIcon Kind="Food" Margin="0 0 10 0" />
-                    <TextBlock Text="{Binding Products.Count}" />
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
+    <StatusBar Grid.Row="2">
+      <StatusBarItem Margin="10 0">
+        <StackPanel Orientation="Horizontal">
+          <md:PackIcon Kind="School" Margin="0 0 10 0"/>
+          <TextBlock Text="{Binding Students.Count}"/>
+        </StackPanel>
+      </StatusBarItem>
+      <StatusBarItem Margin="10 0">
+        <StackPanel Orientation="Horizontal">
+          <md:PackIcon Kind="AccountMultiple" Margin="0 0 10 0" />
+          <TextBlock Text="{Binding Employees.Count}" />
+        </StackPanel>
+      </StatusBarItem>
+      <StatusBarItem Margin="10 0">
+        <StackPanel Orientation="Horizontal">
+          <md:PackIcon Kind="Food" Margin="0 0 10 0" />
+          <TextBlock Text="{Binding Products.Count}" />
+        </StackPanel>
+      </StatusBarItem>
+      <StatusBarItem HorizontalAlignment="Stretch"/>
+      <StatusBarItem HorizontalAlignment="Right" Margin="10 0">
+        <StackPanel Orientation="Horizontal">
+          <md:PackIcon Kind="Account" Margin="0 0 5 0" />
+          <TextBlock Text="{Binding CurrentUser.Username}" />
+        </StackPanel>
+      </StatusBarItem>
+    </StatusBar>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right">
+            <Button Style="{StaticResource WindowCommandButton}" Content="{md:PackIcon WindowMinimize}"
+                    Click="MinimizeClicked" />
+            <Button Style="{StaticResource WindowCommandButton}"
+                    Click="MaximizeClicked"
+                    Content="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow},
+                          Path=WindowState,Converter={converters:WindowStateToPackIcon }}" />
+            <Button Style="{StaticResource WindowCloseButton}" Content="{md:PackIcon WindowClose}"
+                    Click="CloseClicked">
+
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Effects;
 using SFC.Canteen.ViewModels;
 using SFC.Canteen.Views;
@@ -70,6 +71,34 @@ namespace SFC.Canteen
                 ShowLogin();
             else
                 Grid.Effect = null;
+        }
+
+        private void MinimizeClicked(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeClicked(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+                WindowState = WindowState.Maximized;
+            else
+                WindowState = WindowState.Normal;
+        }
+
+        private void CloseClicked(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MainWindow_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

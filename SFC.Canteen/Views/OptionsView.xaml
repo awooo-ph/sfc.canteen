@@ -14,7 +14,11 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <TabControl x:Name="Tab">
-        <TabItem Header="General"/>
+    <TabItem Header="General">
+      <Grid>
+        
+      </Grid>
+    </TabItem>
         <TabItem Header="User Accounts" Visibility="{Binding Source={x:Static viewModels:MainViewModel.Instance},
             Path=CurrentUser.UsersAdmin,Converter={converters:BooleanToVisibility}}">
             <Grid>

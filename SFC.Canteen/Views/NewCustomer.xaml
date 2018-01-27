@@ -15,6 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="174"/>
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,7 +23,6 @@
             <RowDefinition/>
             <RowDefinition />
             <RowDefinition />
-
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -51,7 +51,17 @@
                    Visibility="{Binding IsStudent,Converter={converters:BooleanToVisibility Collapsed,Visible}}" />
         <TextBox Grid.Column="1" Grid.Row="4" Margin="10" Text="{Binding Course,UpdateSourceTrigger=PropertyChanged}" />
 
-        <UniformGrid Grid.Row="5" Columns="2" Margin="10 40 10 10" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right">
+        <Viewbox Margin="10" Grid.Column="2" Grid.RowSpan="5" >
+            <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+                   Stretch="UniformToFill"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Viewbox>
+        <Button Margin="10" Grid.Column="2" Grid.RowSpan="5" 
+                Command="{Binding ChangePicture}"
+                Style="{StaticResource MaterialDesignToolButton}"/>
+
+
+        <UniformGrid Grid.Row="5" Columns="2" Margin="10 40 10 10" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right">
             <Button Margin="0 0 10 0" Content="Cancel" IsCancel="True" Click="ButtonBase_OnClick"/>
             <Button Margin="10 0 0 0" Content="Accept" IsDefault="True" Click="AcceptClicked"/>
         </UniformGrid>
