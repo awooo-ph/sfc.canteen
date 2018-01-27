@@ -12,7 +12,7 @@ namespace SFC.Canteen.Converters
         {
             var prod = value as Product;
             if (prod == null) return "PRODUCT CODE";
-            return prod.ToString();
+            return $"{prod.Description} : P{prod.Price:#,##0.00} [{prod.Quantity:#0} LEFT]";
         }
     }
 }

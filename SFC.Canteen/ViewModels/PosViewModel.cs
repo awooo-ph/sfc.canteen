@@ -9,7 +9,7 @@ using SFC.Canteen.Models;
 
 namespace SFC.Canteen.ViewModels
 {
-    class PosViewModel : INotifyPropertyChanged
+    class PosViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -177,6 +177,7 @@ namespace SFC.Canteen.ViewModels
             OnPropertyChanged(nameof(Change));
         },d=>
         {
+            if (Quantity <= 0) return false;
             if (d == null) d = AddProduct;
             return Customer != null && d != null &&
                                                             d.Quantity >= Quantity &&
@@ -227,5 +228,16 @@ namespace SFC.Canteen.ViewModels
             OnPropertyChanged(nameof(Change));
             OnPropertyChanged(nameof(TotalAmount));
         },d=>Items.Count>0));
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if(columnName == nameof(Quantity) && Quantity <= 0) return "INVALID AMOUNT";
+                return null;
+            }
+        }
+
+        public string Error { get; } = null;
     }
 }

@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
+using MaterialDesignThemes.Wpf;
 using SFC.Canteen.Models;
 using SFC.Canteen.Views;
 using Xceed.Words.NET;

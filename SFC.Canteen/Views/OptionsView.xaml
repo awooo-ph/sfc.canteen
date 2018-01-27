@@ -7,10 +7,12 @@
         xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
         xmlns:converters="clr-namespace:SFC.Canteen.Converters"
         xmlns:models="clr-namespace:SFC.Canteen.Models;assembly=SFC.Canteen.Data"
+        xmlns:properties="clr-namespace:SFC.Canteen.Properties"
         mc:Ignorable="d"
         Title="Options" 
         Width="444"
         Height="333"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <TabControl x:Name="Tab">
@@ -19,6 +21,27 @@
         
       </Grid>
     </TabItem>
+        <TabItem Header="Message Templates">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=TopupMessage}"
+                             md:HintAssist.Hint="Message sent when customers add funds."
+                             md:HintAssist.IsFloating="True"
+                             AcceptsReturn="True"
+                             Margin="20"/>
+                    <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=CheckoutMessage}"
+                             md:HintAssist.Hint="Message sent to customers after checkout."
+                             md:HintAssist.IsFloating="True"
+                             AcceptsReturn="True"
+                             Margin="20" />
+                </StackPanel>
+                <Button Grid.Row="1" Content="SAVE"/>
+            </Grid>
+        </TabItem>
         <TabItem Header="User Accounts" Visibility="{Binding Source={x:Static viewModels:MainViewModel.Instance},
             Path=CurrentUser.UsersAdmin,Converter={converters:BooleanToVisibility}}">
             <Grid>
