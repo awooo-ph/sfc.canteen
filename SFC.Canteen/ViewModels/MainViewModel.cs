@@ -189,7 +189,11 @@ namespace SFC.Canteen.ViewModels
 
         public ICommand NewEmployeeCommand => _newEmployeeCommand ?? (_newEmployeeCommand = new DelegateCommand(d =>
         {
-            var stud = new Customer() {IsStudent = false};
+            var stud = new Customer()
+            {
+                IsStudent = false,
+                Picture = ImageProcessor.Generate()
+            };
             while (true)
             {
                 if (new NewCustomer() {DataContext = stud, Title = "New Employee"}
