@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -17,6 +18,19 @@ namespace SFC.Canteen
         {
             InitializeComponent();
             awooo.Context = SynchronizationContext.Current;
+        }
+        
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            RfidScanner.UnHook();
+            base.OnClosing(e);
+            
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            RfidScanner.Hook(this);
+            base.OnSourceInitialized(e);
         }
 
         protected override void OnActivated(EventArgs e)

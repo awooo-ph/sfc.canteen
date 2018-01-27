@@ -130,5 +130,41 @@ namespace SFC.Canteen.Properties {
                 this["SalesSyncCode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ScannerId {
+            get {
+                return ((string)(this["ScannerId"]));
+            }
+            set {
+                this["ScannerId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ScannerName {
+            get {
+                return ((string)(this["ScannerName"]));
+            }
+            set {
+                this["ScannerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
+        public string ModemPort {
+            get {
+                return ((string)(this["ModemPort"]));
+            }
+            set {
+                this["ModemPort"] = value;
+            }
+        }
     }
 }

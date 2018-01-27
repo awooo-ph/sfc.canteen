@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Media;
 using RawInputProcessor;
+using SFC.Canteen.Properties;
 
 namespace SFC.Canteen
 {
@@ -47,18 +48,16 @@ namespace SFC.Canteen
 
             if (IsWaitingForScanner)
             {
-                Config.Rfid.ScannerId = GetScannerId(e.Device);
-                Config.Rfid.Description = e.Device.Description;
-                Config.Rfid.ScannerType = e.Device.Type.ToString();
-                Config.Rfid.Fullname = e.Device.Name;
-                Config.Rfid.Save();
+                Settings.Default.ScannerId = GetScannerId(e.Device);
+                Settings.Default.ScannerName = e.Device.Description.ToString();
+                Settings.Default.Save();
                 IsWaitingForScanner = false;
                 Messenger.Default.Broadcast(Messages.ScannerRegistered);
                 _input.Clear();
                 return;
             }
 
-            if (GetScannerId(e.Device) == Config.Rfid.ScannerId)
+            if (GetScannerId(e.Device) == Settings.Default.ScannerId)
             {
                 if (e.KeyPressState != KeyPressState.Down) return;
                 if (e.Key != Key.Enter)
@@ -70,7 +69,6 @@ namespace SFC.Canteen
                     Messenger.Default.Broadcast(Messages.Scan, _input.ToString());
                     _input.Clear();
                 }
-                //  TrapKey = true;
             }
 
         }
@@ -88,11 +86,6 @@ namespace SFC.Canteen
 
         public static void UnHook()
         {
-            //if(hookPtr != IntPtr.Zero)
-            //{
-            //    UnhookWindowsHookEx(hookPtr);
-            //    hookPtr = IntPtr.Zero;
-            //}
             _rawInput.KeyPressed -= RawInputOnKeyPressed;
             _rawInput.Dispose();
         }
