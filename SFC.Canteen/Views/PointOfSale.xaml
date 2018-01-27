@@ -10,6 +10,22 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <EventTrigger.Actions>
+                <BeginStoryboard>
+                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                        <DoubleAnimation To="0" From="1" Duration="0:0:0.4"
+                                         Storyboard.TargetName="RfidSignal"
+                                         AutoReverse="True"
+                                         RepeatBehavior="Forever"
+                                         Storyboard.TargetProperty="Opacity" />
+
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger.Actions>
+        </EventTrigger>
+    </UserControl.Triggers>
     <Grid>
         <Grid IsEnabled="{Binding IsTransactionStarted}">
             <Grid.RowDefinitions>
@@ -32,15 +48,15 @@
                                 <StackPanel Orientation="Horizontal">
 
                                     <TextBox Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}"
-                             Width="174"
+                             Width="222"
                                  materialDesign:HintAssist.IsFloating="True"
                                  materialDesign:HintAssist.Hint="{Binding AddProduct,Converter={converters:ProductConverter}, FallbackValue=PRODUCT\ CODE}"
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"/>
 
-                                    <TextBox Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=False,ValidatesOnDataErrors=True}"
                                      Margin="10 0"
-                                     Width="74"
+                                     Width="147"
                                      TextAlignment="Center"
                                      materialDesign:HintAssist.Hint="QUANTITY"
                                      materialDesign:HintAssist.IsFloating="True"
@@ -200,68 +216,14 @@
 
             <md:Card HorizontalAlignment="Center" VerticalAlignment="Center" UniformCornerRadius="7"
                      Margin="20">
-                
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                <TextBlock Text="SELECT CUSTOMER" FontSize="15pt" FontWeight="Bold" 
-                           Margin="10"/>
-                    
-                    <TextBox Text="{Binding SearchKeyword,UpdateSourceTrigger=PropertyChanged}"
-                             Margin="10"
-                             materialDesign:HintAssist.Hint="SEARCH KEYWORD"
-                             Grid.Row="1" />
-                
-                    <ListBox Margin="0 20" ItemsSource="{Binding Result}" Grid.IsSharedSizeScope="True"
-                             Grid.Row="2"
-                         IsSynchronizedWithCurrentItem="True"
-                         MaxHeight="444">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="a"/>
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Border Height="48"
-                                            Grid.RowSpan="2"
-                                            Margin="0 0 7 0"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Width="48">
-                                        <Border.OpacityMask>
-                                            <VisualBrush>
-                                                <VisualBrush.Visual>
-                                                    <Ellipse Height="7" Width="7" Fill="Red"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Border.OpacityMask>
-                                    <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
-                                           Stretch="UniformToFill"
-                                           RenderOptions.BitmapScalingMode="HighQuality" />
-                                    </Border>
-                                    <TextBlock Text="{Binding Fullname}" Grid.Column="1" FontWeight="Bold" 
-                                               Margin="0 0 7 0"
-                                               FontSize="14pt"/>
-                                    <TextBlock Text="{Binding Course}" Grid.Column="1" Grid.Row="1" 
-                                               FontSize="11pt"
-                                               Margin="0 4 0 0"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
 
-                <Button Content="START TRANSACTION" Command="{Binding SelectCustomerCommand}" IsDefault="True"
-                        Grid.Row="3"/>
-            </Grid>
+                <Grid>
+                    <Image Source="/contactless-icon.png" Height="128" x:Name="RfidSignal"
+                               Stretch="Uniform"
+                               Margin="20"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               VerticalAlignment="Center"/>
+                </Grid>
             </md:Card>
         </Grid>
     </Grid>
