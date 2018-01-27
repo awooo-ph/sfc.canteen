@@ -68,10 +68,14 @@
                 </Style>
             </DataGrid.ItemContainerStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="RFID" Binding="{Binding RFID}"/>
-                <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"/>
-                <DataGridTextColumn Header="Last Name" Binding="{Binding Lastname}"/>
-                <DataGridTextColumn Header="Job" Binding="{Binding Course}"/>
+                <DataGridTextColumn Header="RFID" Binding="{Binding RFID}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                <DataGridTextColumn Header="Last Name" Binding="{Binding Lastname}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                <DataGridTextColumn Header="Job" Binding="{Binding Course}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTemplateColumn Header="Credits" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

@@ -51,13 +51,18 @@
                    Visibility="{Binding IsStudent,Converter={converters:BooleanToVisibility Collapsed,Visible}}" />
         <TextBox Grid.Column="1" Grid.Row="4" Margin="10" Text="{Binding Course,UpdateSourceTrigger=PropertyChanged}" />
 
-        <Viewbox Margin="10" Grid.Column="2" Grid.RowSpan="5" >
+        
             <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+                   Margin="10" Grid.Column="2" Grid.RowSpan="5" 
+                   Height="222"
                    Stretch="UniformToFill"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
-        </Viewbox>
+        
         <Button Margin="10" Grid.Column="2" Grid.RowSpan="5" 
-                Command="{Binding ChangePicture}"
+                Command="{Binding ChangePictureCommand}"
+                Height="Auto"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
                 Style="{StaticResource MaterialDesignToolButton}"/>
 
 

@@ -148,7 +148,11 @@ namespace SFC.Canteen.ViewModels
 
         public ICommand NewStudentCommand => _newStudentCommand ?? (_newStudentCommand = new DelegateCommand(d =>
         {
-            var stud = new Customer(){IsStudent = true};
+            var stud = new Customer()
+            {
+                IsStudent = true,
+                Picture = ImageProcessor.Generate()
+            };
             while (true)
             {
                 
@@ -346,7 +350,7 @@ namespace SFC.Canteen.ViewModels
             
             PosViewModel.Customer = c;
             SelectedTab = POS;
-        },d=> !PosViewModel.IsTransactionStarted));
+        },d=> !PosViewModel.IsTransactionStarted && d?.Credits>0));
 
         private PosViewModel _PosViewModel = new PosViewModel(null);
 

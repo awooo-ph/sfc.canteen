@@ -73,9 +73,12 @@
                 </Style>
             </DataGrid.ItemContainerStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Product Code" Binding="{Binding Code}"/>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
-                <DataGridTextColumn Header="Unit Price" Binding="{Binding Price, StringFormat={}#\,##0.00}"/>
+                <DataGridTextColumn Header="Product Code" Binding="{Binding Code}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+                <DataGridTextColumn Header="Unit Price" Binding="{Binding Price, StringFormat={}#\,##0.00}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTemplateColumn Header="Stocks On Hand" IsReadOnly="True" SortMemberPath="Quantity">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
