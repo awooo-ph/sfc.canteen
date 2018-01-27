@@ -11,78 +11,71 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-    <Grid IsEnabled="{Binding IsTransactionStarted}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid IsEnabled="{Binding IsTransactionStarted}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                    <StackPanel>
-                        <TextBlock Text="Product Code: "
-                            VerticalAlignment="Center" />
-                        <TextBox Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}"
+            <Border ClipToBounds="True">
+                <md:ColorZone md:ShadowAssist.ShadowDepth="Depth2"
+                          Margin="-10 -10 -10 10">
+                    <Grid Margin="17 17 17 7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Padding="7">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+
+                                    <TextBox Text="{Binding Code,UpdateSourceTrigger=PropertyChanged}"
                              Width="174"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 materialDesign:HintAssist.Hint="{Binding AddProduct,Converter={converters:ProductConverter}, FallbackValue=PRODUCT\ CODE}"
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"/>
-                    </StackPanel>
-                        <StackPanel Margin="10 0">
-                            <TextBlock Text="Quantity: "
-                                       VerticalAlignment="Center" />
-                            <TextBox Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}"
+
+                                    <TextBox Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="10 0"
                                      Width="74"
+                                     TextAlignment="Center"
+                                     materialDesign:HintAssist.Hint="QUANTITY"
+                                     materialDesign:HintAssist.IsFloating="True"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center" />
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="Description: " FontWeight="Bold" />
+
+                                </StackPanel>
+                                <!--<Grid Margin="0 7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding AddProduct.Description}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="Price: " FontWeight="Bold" />
-                            <TextBlock Text="{Binding AddProduct.Price,StringFormat={}#\,##0.00}" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-               
-                <UniformGrid Rows="1" Grid.Column="2">
-                    <Button Command="{Binding AddProductCommand}"
+                            <TextBlock Text="{Binding AddProduct.Price,StringFormat={}#\,##0.00}" 
+                                       Grid.Column="1"/>
+                        </Grid>-->
+                            </StackPanel>
+                        </Border>
+
+                        <UniformGrid Rows="1" Grid.Column="2">
+                            <Button Command="{Binding AddProductCommand}"
+                            Height="Auto"
                             Margin="5 0">
-                        <StackPanel Margin="7 0">
-                            <materialDesign:PackIcon Kind="Food" Height="24" Width="24" HorizontalAlignment="Center" />
-                            <TextBlock Text="Add Item" />
-                        </StackPanel>
-                    </Button>
+                                <StackPanel Margin="7 0" Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Food" Height="24" Width="24" HorizontalAlignment="Center" />
+                                    <TextBlock Text="ADD ITEM" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
-                    <Button Margin="5 0" Command="{Binding CancelCommand}">
-                        <StackPanel Margin="7 0">
-                            <materialDesign:PackIcon Kind="Close" Height="24" Width="24" HorizontalAlignment="Center" />
-                            <TextBlock Text="Cancel" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button Margin="5 0" Command="{Binding CheckoutCommand}">
-                        <StackPanel Margin="7 0">
-                            <materialDesign:PackIcon Kind="Cart" Height="24" Width="24" HorizontalAlignment="Center" />
-                            <TextBlock Text="Checkout" />
-                        </StackPanel>
-                    </Button>
-                </UniformGrid>
-            </Grid>
-
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Items}"
+                            
+                        </UniformGrid>
+                    </Grid>
+                </md:ColorZone>
+            </Border>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Items}"
                   AutoGenerateColumns="False"
                   Grid.IsSharedSizeScope="True"
                   CanUserAddRows="False"
@@ -91,69 +84,117 @@
                   CanUserSortColumns="False"
                   HeadersVisibility="Column"
                   CanUserDeleteRows="False">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Quantity">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Quantity, StringFormat={}#\,##0.00}" TextAlignment="Right" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Product Code" Binding="{Binding Product.Code}"/>
-                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Product.Description}"/>
-                <DataGridTemplateColumn Header="Unit Price">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Product.Price, StringFormat={}#\,##0.00}" TextAlignment="Right" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Sub Total">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Amount, StringFormat={}#\,##0.00}" TextAlignment="Right"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Quantity">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Quantity, StringFormat={}#\,##0.00}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Product Code" Binding="{Binding Product.Code}"/>
+                    <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Product.Description}"/>
+                    <DataGridTemplateColumn Header="Unit Price">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Product.Price, StringFormat={}#\,##0.00}" TextAlignment="Right" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Sub Total" x:Name="SubTotal">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Amount, StringFormat={}#\,##0.00}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <Grid Grid.Row="2" Margin="0 10 0 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            
-            <TextBlock Text="TOTAL AMOUNT: " Grid.Column="1" FontWeight="Bold"/>
-            <TextBlock Text="{Binding TotalAmount,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold"/>
-            
-            <TextBlock Text="REMAINING CREDITS: " Grid.Column="1" Grid.Row="1"/>
-            <TextBlock Text="{Binding Change,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold" Grid.Row="1"/>
+            <Rectangle Grid.Row="2" VerticalAlignment="Top" Height="1" Fill="{StaticResource MaterialDesignDivider}"/>
+            <Grid Grid.Row="2" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="{Binding ElementName=SubTotal,Path=ActualWidth}" />
+                </Grid.ColumnDefinitions>
 
-           
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="4">
-                <GroupBox Header="Customer"
-                      HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <StackPanel Margin="4">
-                        <TextBlock Text="{Binding Customer.Fullname}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Customer.Course}"/>
-                        <TextBlock>
-                        <Run Text="Credits: "/><Run Text="{Binding Customer.Credits,StringFormat={}#\,##0.00}"/>
-                        </TextBlock>
+                <TextBlock Text="TOTAL: " Grid.Column="1"
+                       FontFamily="Consolas"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
+                <TextBlock Text="{Binding TotalAmount,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold"
+                       FontFamily="Consolas"
+                       TextAlignment="Right"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+
+                <TextBlock Text="CREDITS: " Grid.Column="1" Grid.Row="1"
+                       FontFamily="Consolas"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
+                <TextBlock Text="{Binding Customer.Credits,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold" Grid.Row="1"
+                       FontFamily="Consolas"
+                       TextAlignment="Right"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+
+                <TextBlock Text="CHANGE: " Grid.Column="1" Grid.Row="2"
+                       FontFamily="Consolas"
+                           VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
+                <TextBlock Text="{Binding Change,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold" Grid.Row="2"
+                       FontFamily="Consolas"
+                       TextAlignment="Right"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
+
+                <StackPanel Orientation="Horizontal"
+                            Margin="4" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4">
+                    <Image Source="{Binding Customer.Picture,Converter={converters:BytesToImage}}"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Margin="0 0 10 0"
+                           Height="74" Stretch="UniformToFill"/>
+                    <StackPanel >
+                        <TextBlock Text="{Binding Customer.Fullname}" FontWeight="Bold"
+                                   Style="{StaticResource MaterialDesignHeadlineTextBlock}"/>
+                        <TextBlock Text="{Binding Customer.Course}"
+                                   Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
                     </StackPanel>
-                </GroupBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Margin="10 0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal"
+                             Grid.RowSpan="4">
+                    <Button Margin="5 0" Command="{Binding CancelCommand}"
+                            ToolTip="Cancel Transaction"
+                            Height="Auto">
+                        <StackPanel Margin="7 0" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CartOff" Height="24" Width="24" HorizontalAlignment="Center" />
+                            <TextBlock Text="CANCEL" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button Margin="5 0 0 0" Command="{Binding CheckoutCommand}"
+                            Height="Auto">
+                        <StackPanel Margin="7 0" Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CartOutline" Height="24" Width="24"
+                                                     HorizontalAlignment="Center" />
+                            <TextBlock Text="CHECKOUT" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Grid>
-    </Grid>
         <Grid Background="#77ffffff"
               Visibility="{Binding IsTransactionStarted,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
 
