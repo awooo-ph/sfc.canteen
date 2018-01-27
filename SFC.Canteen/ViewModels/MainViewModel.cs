@@ -24,6 +24,15 @@ namespace SFC.Canteen.ViewModels
         {
             if(_instance!=null) throw new Exception("awooo");
             _instance = this;
+            Messenger.Default.AddListener<string>(Messages.Scan, code =>
+            {
+                if (SelectedTab != POS) return;
+                if (PosViewModel.IsTransactionStarted) return;
+                var customer = Customer.Cache.FirstOrDefault(x => x.RFID.ToLower() == code.ToLower());
+                if (customer == null) return;
+                PosViewModel.Customer = customer;
+                PosViewModel.IsTransactionStarted = true;
+            });
         }
 
         private static MainViewModel _instance;

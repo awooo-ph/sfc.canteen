@@ -35,7 +35,7 @@
                 <Button Command="{Binding NewProductCommand}"
                         Style="{StaticResource MaterialDesignFlatButton}">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="FoodVariant" VerticalAlignment="Center" />
+                        <materialDesign:PackIcon Kind="DatabasePlus" VerticalAlignment="Center" />
                         <TextBlock Text=" ADD ITEM" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
@@ -115,7 +115,6 @@
         </ListBox>
         
         <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-              Width="147"
               Visibility="{Binding ElementName=ToggleButton,Path=IsSelected, Converter={converters:BooleanToVisibility},UpdateSourceTrigger=PropertyChanged}">
             <GroupBox Margin="10 0 0 0" Padding="1">
                 <GroupBox.Header>

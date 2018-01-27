@@ -140,9 +140,9 @@
       <TabItem x:Name="StudentsTab"
                      Visibility="{Binding CurrentUser.StudentsAdmin,Converter={converters:BooleanToVisibility}}">
         <TabItem.Header>
-          <StackPanel Orientation="Horizontal">
-            <md:PackIcon Kind="School"/>
-            <TextBlock Text=" Students"/>
+          <StackPanel Orientation="Horizontal" Margin="7">
+            <md:PackIcon Kind="School" Height="32" Width="32"/>
+            <TextBlock Text=" Students" VerticalAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
         <views:Students/>
@@ -151,9 +151,9 @@
       <TabItem x:Name="EmployeesTab"
                      Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}">
         <TabItem.Header>
-          <StackPanel Orientation="Horizontal">
-            <md:PackIcon Kind="Account" />
-            <TextBlock Text=" Employees" />
+          <StackPanel Orientation="Horizontal" Margin="7">
+                        <md:PackIcon Kind="AccountMultipleOutline" Height="32" Width="32" />
+            <TextBlock Text=" Employees" VerticalAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
         <views:Employees/>
@@ -162,9 +162,9 @@
       <TabItem x:Name="ProductsTab"
                      Visibility="{Binding CurrentUser.ProductsAdmin,Converter={converters:BooleanToVisibility}}">
         <TabItem.Header>
-          <StackPanel Orientation="Horizontal">
-            <md:PackIcon Kind="Food" />
-            <TextBlock Text=" Products" />
+          <StackPanel Orientation="Horizontal" Margin="7">
+                        <md:PackIcon Kind="Food" Height="32" Width="32" />
+            <TextBlock Text=" Products" VerticalAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
         <views:Products/>
@@ -175,9 +175,9 @@
                Padding="0"
                      Visibility="{Binding CurrentUser.SalesAdmin,Converter={converters:BooleanToVisibility}}">
         <TabItem.Header>
-          <StackPanel Orientation="Horizontal">
-            <md:PackIcon Kind="BarcodeScan" />
-            <TextBlock Text=" Point-of-Sale" />
+          <StackPanel Orientation="Horizontal" Margin="7">
+                        <md:PackIcon Kind="Cart" Height="32" Width="32" />
+            <TextBlock Text=" Point of Sale" VerticalAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
         <views:PointOfSale DataContext="{Binding PosViewModel}"/>

@@ -39,11 +39,13 @@ namespace SFC.Canteen.Views
             RfidScanner.RegisterScanner();
             RegButton.Visibility = Visibility.Collapsed;
             CancelButton.Visibility = Visibility.Visible;
+            ProgressBar.Visibility = Visibility.Visible;
         }
 
         private void CancelButton_OnClick(object sender, RoutedEventArgs e)
         {
             RfidScanner.CancelRegistration();
+            ProgressBar.Visibility = Visibility.Collapsed;
             RegButton.Visibility = Visibility.Visible;
             CancelButton.Visibility = Visibility.Collapsed;
         }

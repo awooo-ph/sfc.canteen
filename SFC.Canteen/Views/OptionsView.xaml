@@ -44,6 +44,22 @@
                            Grid.Row="1"
                            VerticalAlignment="Center"
                            FontWeight="Bold" />
+                <Grid Visibility="Collapsed"
+                      x:Name="ProgressBar"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      Grid.Row="0" Grid.RowSpan="2"
+                      Background="#CCFFFFFF">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             IsIndeterminate="True"/>
+                        <TextBlock Text=" WAITING FOR SCANNER"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+                </Grid>
                 <Grid Grid.Row="2"
                       Grid.ColumnSpan="2"
                       Margin="10">

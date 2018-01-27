@@ -15,12 +15,13 @@
             <EventTrigger.Actions>
                 <BeginStoryboard>
                     <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                        <DoubleAnimation To="0" From="1" Duration="0:0:0.4"
+                        <DoubleAnimation To="1" From="0" Duration="0:0:0.7"
+                                         
                                          Storyboard.TargetName="RfidSignal"
                                          AutoReverse="True"
                                          RepeatBehavior="Forever"
                                          Storyboard.TargetProperty="Opacity" />
-
+                        
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger.Actions>
@@ -211,20 +212,23 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <Grid Background="#77777777"
+        <Grid Background="#77FFFFFF"
               Visibility="{Binding IsTransactionStarted,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
 
-            <md:Card HorizontalAlignment="Center" VerticalAlignment="Center" UniformCornerRadius="7"
-                     Margin="20">
 
-                <Grid>
-                    <Image Source="/contactless-icon.png" Height="128" x:Name="RfidSignal"
+                <Grid Margin="20"
+                      HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Rectangle Fill="{StaticResource MaterialDesignDarkBackground}"
+                               x:Name="RfidSignal"
                                Stretch="Uniform"
-                               Margin="20"
-                               RenderOptions.BitmapScalingMode="HighQuality"
-                               VerticalAlignment="Center"/>
+                               Height="222" Width="222">
+                        <Rectangle.OpacityMask>
+                            <ImageBrush ImageSource="/contactless-icon.png"/>
+                        </Rectangle.OpacityMask>
+                    
+                    </Rectangle>
                 </Grid>
-            </md:Card>
+
         </Grid>
     </Grid>
 </UserControl>

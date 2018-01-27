@@ -76,7 +76,7 @@
                                 <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
                                        Cursor="Hand"
                                        Stretch="UniformToFill"
-                                       Height="24" Width="24" />
+                                       Height="16" Width="16" />
                                 <Button Style="{StaticResource MaterialDesignToolButton}"
                                         Height="Auto"
                                         Command="{Binding ChangePictureCommand}"
