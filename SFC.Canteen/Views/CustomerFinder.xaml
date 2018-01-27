@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFC.Canteen.Views"
+        xmlns:converters="clr-namespace:SFC.Canteen.Converters"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
@@ -16,8 +17,29 @@
         </StackPanel>
         <ListBox Margin="0 20" ItemsSource="{Binding Result}" Grid.IsSharedSizeScope="True"
                  IsSynchronizedWithCurrentItem="True"
-                 Height="174"
-                 DisplayMemberPath="Fullname"/>
+                 MaxHeight="444">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+                               Grid.RowSpan="2"
+                               Margin="0 0 7 0"
+                               VerticalAlignment="Center"
+                               Height="32" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock Text="{Binding Fullname}" Grid.Column="1" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Course}" Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <UniformGrid HorizontalAlignment="Right" Columns="2">
             <Button Margin="0 0 5 0" Content="Cancel" IsCancel="True"/>
             <Button Margin="0 0 5 0" Content="Select" IsDefault="True" Click="ButtonBase_OnClick"/>

@@ -136,8 +136,8 @@ namespace SFC.Canteen.ViewModels
             var customer = o as Customer;
             if (customer == null)
                 return false;
-            return customer.RFID.Contains(SearchKeyword) ||
-                   customer.Fullname.ToLower().Contains(SearchKeyword?.ToLower());
+            return customer.RFID.ToLower().Contains(SearchKeyword?.ToLower()??"") ||
+                   customer.Fullname.ToLower().Contains(SearchKeyword?.ToLower()??"");
         }
 
         private ICommand _selectCustomerCommand;

@@ -116,7 +116,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="{Binding ElementName=SubTotal,Path=ActualWidth}" />
+                    <ColumnDefinition Width="Auto" MinWidth="{Binding ElementName=SubTotal,Path=ActualWidth}" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -195,35 +195,74 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <Grid Background="#77ffffff"
+        <Grid Background="#77777777"
               Visibility="{Binding IsTransactionStarted,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
 
-            <md:ColorZone HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="7" Mode="Light"
-                          materialDesign:ShadowAssist.ShadowDepth="Depth2">
-                <md:ColorZone.Resources>
-                    <ResourceDictionary>
-                        <ResourceDictionary.MergedDictionaries>
-                            <ResourceDictionary
-                                Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                            <ResourceDictionary
-                                Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                        </ResourceDictionary.MergedDictionaries>
-                    </ResourceDictionary>
-                </md:ColorZone.Resources>
-            <StackPanel Margin="20">
-                <TextBlock Text="New Sale Transaction" FontSize="15pt" FontWeight="Bold" />
-                <StackPanel Orientation="Horizontal" Margin="0 10">
-                    <TextBlock Text="SEARCH: " VerticalAlignment="Bottom"/>
-                    <TextBox Text="{Binding SearchKeyword,UpdateSourceTrigger=PropertyChanged}" Width="174" />
-                </StackPanel>
-                <ListBox Margin="0 20" ItemsSource="{Binding Result}" Grid.IsSharedSizeScope="True"
+            <md:Card HorizontalAlignment="Center" VerticalAlignment="Center" UniformCornerRadius="7"
+                     Margin="20">
+                
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                <TextBlock Text="SELECT CUSTOMER" FontSize="15pt" FontWeight="Bold" 
+                           Margin="10"/>
+                    
+                    <TextBox Text="{Binding SearchKeyword,UpdateSourceTrigger=PropertyChanged}"
+                             Margin="10"
+                             materialDesign:HintAssist.Hint="SEARCH KEYWORD"
+                             Grid.Row="1" />
+                
+                    <ListBox Margin="0 20" ItemsSource="{Binding Result}" Grid.IsSharedSizeScope="True"
+                             Grid.Row="2"
                          IsSynchronizedWithCurrentItem="True"
-                         MaxHeight="174"
-                         DisplayMemberPath="Fullname" />
+                         MaxHeight="444">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="a"/>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Height="48"
+                                            Grid.RowSpan="2"
+                                            Margin="0 0 7 0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Width="48">
+                                        <Border.OpacityMask>
+                                            <VisualBrush>
+                                                <VisualBrush.Visual>
+                                                    <Ellipse Height="7" Width="7" Fill="Red"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Border.OpacityMask>
+                                    <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+                                           Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Border>
+                                    <TextBlock Text="{Binding Fullname}" Grid.Column="1" FontWeight="Bold" 
+                                               Margin="0 0 7 0"
+                                               FontSize="14pt"/>
+                                    <TextBlock Text="{Binding Course}" Grid.Column="1" Grid.Row="1" 
+                                               FontSize="11pt"
+                                               Margin="0 4 0 0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
-                <Button Content="START" Command="{Binding SelectCustomerCommand}" IsDefault="True"/>
-            </StackPanel>
-            </md:ColorZone>
+                <Button Content="START TRANSACTION" Command="{Binding SelectCustomerCommand}" IsDefault="True"
+                        Grid.Row="3"/>
+            </Grid>
+            </md:Card>
         </Grid>
     </Grid>
 </UserControl>

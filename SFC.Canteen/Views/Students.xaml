@@ -46,6 +46,7 @@
                   AutoGenerateColumns="False"
                   Grid.IsSharedSizeScope="True"
                   CanUserAddRows="False"
+                  VerticalContentAlignment="Center"
                   Grid.ColumnSpan="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:BooleanToObject 1,2}}"
                   HeadersVisibility="Column"
                   CanUserDeleteRows="False">
@@ -67,6 +68,24 @@
                 </Style>
             </DataGrid.ItemContainerStyle>
             <DataGrid.Columns>
+                <DataGridTemplateColumn Header="{md:PackIcon Kind=AccountBox}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                            <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+                                   Cursor="Hand"
+                                   Stretch="UniformToFill"
+                                   Height="24" Width="24"/>
+                                <Button Style="{StaticResource MaterialDesignToolButton}"
+                                        Height="Auto"
+                                        Command="{Binding ChangePictureCommand}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch"/>
+                                
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="RFID" Binding="{Binding RFID}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                 <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
