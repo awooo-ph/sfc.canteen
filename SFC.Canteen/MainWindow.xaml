@@ -153,7 +153,7 @@
                      Visibility="{Binding CurrentUser.EmployeesAdmin,Converter={converters:BooleanToVisibility}}">
         <TabItem.Header>
           <StackPanel Orientation="Horizontal" Margin="7">
-                        <md:PackIcon Kind="AccountMultipleOutline" Height="32" Width="32" />
+                        <md:PackIcon Kind="AccountMultiple" Height="32" Width="32" />
             <TextBlock Text=" Employees" VerticalAlignment="Center"/>
           </StackPanel>
         </TabItem.Header>
@@ -183,7 +183,18 @@
         </TabItem.Header>
         <views:PointOfSale DataContext="{Binding PosViewModel}"/>
       </TabItem>
-    </TabControl>
+
+            <TabItem x:Name="ReportsTab"
+                     Padding="0">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Margin="7">
+                        <md:PackIcon Kind="ChartBar" Height="32" Width="32" />
+                        <TextBlock Text=" Reports" VerticalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <views:Reports />
+            </TabItem>
+        </TabControl>
 
     <StatusBar Grid.Row="2">
       <StatusBarItem Margin="10 0">

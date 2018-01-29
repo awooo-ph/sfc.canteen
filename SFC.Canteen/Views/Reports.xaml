@@ -1,0 +1,244 @@
+﻿<UserControl x:Class="SFC.Canteen.Views.Reports"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SFC.Canteen.Views"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
+             xmlns:converters="clr-namespace:SFC.Canteen.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             DataContext="{Binding Source={x:Static viewModels:ReportsViewModel.Instance}}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ToolBarTray>
+        <ToolBar Header="{md:PackIcon FilterOutline}" Padding="10">
+            <TextBlock Text="FILTER" ToolBar.OverflowMode="Never"
+                       VerticalAlignment="Center" />
+                    
+            <DatePicker md:HintAssist.Hint="FROM DATE"
+                        ToolBar.OverflowMode="Never"
+                        VerticalAlignment="Center"
+                        MinWidth="74"
+                        DisplayDateEnd="{Binding DateEnd}"
+                        SelectedDate="{Binding DateStart}"
+                        Margin="10 0"
+                        md:HintAssist.IsFloating="True"/>
+            <DatePicker md:HintAssist.Hint="TO DATE"
+                        ToolBar.OverflowMode="Never"
+                        VerticalAlignment="Center"
+                        MinWidth="74"
+                        DisplayDateStart="{Binding DateStart}"
+                       
+                        SelectedDate="{Binding DateEnd}"
+                        Margin="0 0 20 0"
+                        md:HintAssist.IsFloating="True" />
+
+
+                <ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
+                         Height="Auto"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Stretch">
+                    <ListBoxItem Height="Auto" VerticalAlignment="Stretch"
+                                 IsSelected="{Binding IncludeTopup}"
+                                 md:ListBoxAssist.IsToggle="False">
+                        <StackPanel Orientation="Horizontal">
+                            <md:PackIcon Kind="Coin" VerticalAlignment="Center" />
+                            <TextBlock Text=" TOPUP" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+                <ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
+                         VerticalAlignment="Center">
+                    <ListBoxItem Height="Auto"
+                                 IsSelected="{Binding IncludeSales}"
+                                 md:ListBoxAssist.IsToggle="False">
+                        <StackPanel Orientation="Horizontal">
+                            <md:PackIcon Kind="CartOutline" VerticalAlignment="Center" />
+                            <TextBlock Text=" SALE" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+                
+
+            </ToolBar>
+            
+            <ToolBar>
+                <Button Content="{md:PackIcon Printer}" ToolTip="Print" ToolBar.OverflowMode="Never"/>
+                <Grid Visibility="Collapsed">
+                    <Rectangle Fill="{StaticResource MaterialDesignFlatButtonClick}"
+                               Visibility="{Binding ShowSummary,Converter={converters:BooleanToVisibility}}"/>
+                <Button Content="{md:PackIcon Calculator}" ToolTip="Show/hide summary" 
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Command="{Binding ToggleSummaryCommand}"/>
+                </Grid>
+                <Grid>
+                    <Rectangle Fill="{StaticResource MaterialDesignFlatButtonClick}"
+                               Visibility="{Binding ShowDetails,Converter={converters:BooleanToVisibility}}" />
+                    <Button Content="{md:PackIcon FormatListBulleted}" ToolTip="Show/hide sale details"
+                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Command="{Binding ToggleDetailsCommand}"/>
+                    </Grid>
+            </ToolBar>
+        </ToolBarTray>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        <DataGrid ItemsSource="{Binding Report}"
+                  Grid.RowSpan="2"
+                  SelectionMode="Single"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserDeleteRows="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn SortMemberPath="Topup">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <md:PackIcon Kind="Coin" Visibility="{Binding Topup,Converter={converters:BooleanToVisibility}}"/>
+                                <md:PackIcon Kind="CartOutline"
+                                             Visibility="{Binding Topup,Converter={converters:BooleanToVisibility Collapsed,Visible}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding Id}" Header="REF#"/>
+                <DataGridTextColumn Binding="{Binding Time}" Header="TIME"/>
+                
+                    <DataGridTemplateColumn Header="NAME">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Background="Transparent" Cursor="Hand">
+                                    <Grid.InputBindings>
+                                        <MouseBinding MouseAction="LeftClick"
+                                                      Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=ShowCustomerCommand}"
+                                                      CommandParameter="{Binding Customer}" />
+                                    </Grid.InputBindings>
+                                    <TextBlock Text="{Binding Customer.Fullname}"
+                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=IsMouseOver,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
+                                               x:Name="TextBlock"/>
+                                    <TextBlock Text="{Binding Customer.Fullname}"                                            
+                                               Foreground="Blue"
+                                               Visibility="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=IsMouseOver,Converter={converters:BooleanToVisibility}}"
+                                               TextDecorations="Underline"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Amount" Header="AMOUNT">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Amount,StringFormat={}#\,##0.00}"
+                                       TextAlignment="Right"
+                                       HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+            <GroupBox Header="SALE DETAILS" Grid.Column="1" Grid.Row="0"
+                      Grid.RowSpan="{Binding DetailsRowSpan}"
+                      Visibility="{Binding ShowDetails,Converter={converters:BooleanToVisibility}}">
+                <DataGrid ItemsSource="{Binding Report/Items}" AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="QTY" Binding="{Binding Quantity}"/>
+                        <DataGridTemplateColumn Header="ITEM">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Background="Transparent" Cursor="Hand">
+                                        <Grid.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick"
+                                                          Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=ShowProductCommand}"
+                                                          CommandParameter="{Binding Product}" />
+                                        </Grid.InputBindings>
+                                        <TextBlock Text="{Binding Product.Description}"
+                                                   Visibility="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=IsMouseOver,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
+                                                   x:Name="TextBlock" />
+                                        <TextBlock Text="{Binding Product.Description}"
+                                                   Foreground="Blue"
+                                                   Visibility="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=IsMouseOver,Converter={converters:BooleanToVisibility}}"
+                                                   TextDecorations="Underline" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn SortMemberPath="Amount" Header="AMOUNT">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Amount,StringFormat={}#\,##0.00}"
+                                               TextAlignment="Right"
+                                               HorizontalAlignment="Stretch" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="SUMMARY" Grid.Column="1" Grid.Row="{Binding SummaryRow}"
+                      Grid.RowSpan="2"
+                      Visibility="{Binding ShowSummary,Converter={converters:BooleanToVisibility}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <md:PackIcon Kind="Food" Height="32" Width="32"/>
+                    <TextBlock Text=" ITEMS SOLD: " Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="1" Grid.Row="0"/>
+                    <TextBlock Text="0" TextAlignment="Right"
+                               Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="2" Grid.Row="0"/>
+
+                    <md:PackIcon Kind="Cart" Height="32" Width="32" 
+                                 Grid.Row="1" Grid.Column="0"/>
+                    <TextBlock Text=" TOTAL SALES: " Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="1" Grid.Row="1" />
+                    <TextBlock Text="0.00" TextAlignment="Right"
+                               Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="2" Grid.Row="1" />
+
+                    <md:PackIcon Kind="Coin" Height="32" Width="32"
+                                 Grid.Row="2" Grid.Column="0" />
+                    <TextBlock Text=" TOTAL TOPUP: " Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="1" Grid.Row="2" />
+                    <TextBlock Text="0.00" TextAlignment="Right"
+                               Style="{StaticResource MaterialDesignTitleTextBlock}"
+                               VerticalAlignment="Center"
+                               Grid.Column="2" Grid.Row="2" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -18,7 +18,7 @@ namespace SFC.Canteen.ViewModels
 {
     class MainViewModel : MarkupExtension, INotifyPropertyChanged
     {
-        public const int STUDENTS = 0, EMPLOYEES = 1, PRODUCTS=2, POS=3;
+        public const int STUDENTS = 0, EMPLOYEES = 1, PRODUCTS=2, POS=3,REPORTS=4;
 
         public MainViewModel()
         {
@@ -243,10 +243,36 @@ namespace SFC.Canteen.ViewModels
             var topVm = new TopupViewModel(c);
             if ((new TopUp() {DataContext = topVm}.ShowDialog() ?? false) && topVm.Credits>0 && topVm.Customer!=null)
             {
+                Sale.Create(topVm.Customer.Id, topVm.Credits, true).Save();
                 topVm.Customer.Update(nameof(topVm.Customer.Credits), topVm.Customer.Credits+topVm.Credits);
                 CustomerLog.Add(topVm.Customer.Id,$"Deposited Php {topVm.Credits:#,##0.00}.");
             }
         },d=>d!=null));
+
+        private ICommand _showCustomerCommand;
+
+        public ICommand ShowCustomerCommand => _showCustomerCommand ?? (_showCustomerCommand = new DelegateCommand<Customer>(cust =>
+        {
+            if (cust.IsStudent)
+            {
+                SelectedTab = STUDENTS;
+                Students.MoveCurrentTo(cust);
+            }
+            else
+            {
+                SelectedTab = EMPLOYEES;
+                Employees.MoveCurrentTo(cust);
+            }
+           
+        }));
+
+        private ICommand _showProductCommand;
+
+        public ICommand ShowProductCommand => _showProductCommand ?? (_showProductCommand = new DelegateCommand<Product>(d =>
+        {
+            SelectedTab = PRODUCTS;
+            Products.MoveCurrentTo(d);
+        }));
 
         private ICommand _runExternalCommand;
 
