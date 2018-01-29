@@ -5,23 +5,83 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFC.Canteen.Views"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
-        SizeToContent="WidthAndHeight"
+        ResizeMode="CanResize"
+        MinHeight="222"
+        MinWidth="333"
+        MaxWidth="333"
+        MaxHeight="222"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Sign In">
-    <StackPanel Margin="10">
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="USERNAME: "/>
-            <TextBox Width="174" x:Name="Username"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="PASSWORD: " />
-            <PasswordBox Width="174" x:Name="Password" />
-        </StackPanel>
-        <UniformGrid Rows="1" Margin="0 40 0 0">
-            <Button Margin="0 0 5 0" Content="E_XIT" IsCancel="True" Click="ExitClicked"/>
-            <Button Margin="5 0 0 0" Content="_LOGIN" IsDefault="True" Click="LoginClicked"/>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Image Source="pack://application:,,,/sfc.png"
+               Height="111" Width="111"
+               Grid.RowSpan="2"
+               Grid.Row="1"
+               VerticalAlignment="Top"
+               Margin="10"
+               RenderOptions.BitmapScalingMode="HighQuality"/>
+
+        <!--<TextBlock Text="SIGN IN" 
+                   Grid.Row="0"
+                   Margin="10"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                   Grid.Column="1"/>-->
+        
+        <TextBox x:Name="Username"
+                     md:HintAssist.IsFloating="True"
+                 KeyboardNavigation.TabIndex="0"
+                     Grid.Column="1"
+                     Grid.Row="1"
+                     Margin="10 0 20 0" >
+            <md:HintAssist.Hint>
+                <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Kind="Account"/>
+                    <TextBlock Text=" YOUR USERNAME"/>
+                </StackPanel>
+            </md:HintAssist.Hint>
+        </TextBox>
+
+
+        <PasswordBox x:Name="Password"
+                         md:HintAssist.IsFloating="True"
+                         Grid.Column="1"
+                     KeyboardNavigation.TabIndex="1"
+                         Grid.Row="2"
+                         Margin="10 10 20 10" >
+            <md:HintAssist.Hint>
+                <StackPanel Orientation="Horizontal">
+                    <md:PackIcon Kind="Key" />
+                    <TextBlock Text=" YOUR PASSWORD" />
+                </StackPanel>
+            </md:HintAssist.Hint>
+        </PasswordBox>
+        
+        <UniformGrid Rows="1" Margin="0 40 0 0"
+                     VerticalAlignment="Bottom"
+                     Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
+            <Button Content="E_XIT" IsCancel="True" Click="ExitClicked"
+                    KeyboardNavigation.TabIndex="3"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+            <Button Content="_LOGIN" IsDefault="True" Click="LoginClicked"
+                    KeyboardNavigation.TabIndex="2"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
         </UniformGrid>
-    </StackPanel>
+    </Grid>
+    
 </Window>

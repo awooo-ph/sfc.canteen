@@ -17,7 +17,8 @@ namespace SFC.Canteen
         public MainWindow()
         {
             InitializeComponent();
-            awooo.Context = SynchronizationContext.Current;
+            if(awooo.Context==null)
+                awooo.Context = SynchronizationContext.Current;
         }
         
         protected override void OnClosing(CancelEventArgs e)
@@ -78,7 +79,11 @@ namespace SFC.Canteen
                 MainViewModel.Instance.Login(login.Username.Text, login.Password.Password);
             }
             else
+            {
+                Close();
                 Application.Current.Shutdown(0);
+                return;
+            }
             _loginShown = false;
 
             if (MainViewModel.Instance.CurrentUser == null)

@@ -20,6 +20,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"     
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
+        Icon="/icon.ico"
         MinWidth="666" MinHeight="333"
         MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
         Title="SFC Canteen" Height="555" Width="777">
