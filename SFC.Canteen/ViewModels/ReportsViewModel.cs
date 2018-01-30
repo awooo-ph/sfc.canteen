@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using SFC.Canteen.Models;
+using Xceed.Words.NET;
 
 namespace SFC.Canteen.ViewModels
 {
@@ -16,7 +22,7 @@ namespace SFC.Canteen.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            Report.Filter = FilterSale;
+           
         }
         
         private ReportsViewModel() { }
@@ -24,20 +30,30 @@ namespace SFC.Canteen.ViewModels
         public static ReportsViewModel Instance => _instance ?? (_instance = new ReportsViewModel());
 
         private ListCollectionView _report;
+        private ObservableCollection<Sale> _sales = new ObservableCollection<Sale>();
+        public ListCollectionView Report => _report ?? (_report = new ListCollectionView(_sales));
 
-        public ListCollectionView Report
+        private void RefreshFilter()
         {
-            get
-            {
-                if (_report != null) return _report;
-                _report = new ListCollectionView(Models.Sale.Cache);
-                _report.Filter = FilterSale;
-                Models.Sale.Cache.CollectionChanged += (sender, args) =>
+            
+            var items = Sale.Where(IncludeSales, IncludeTopup, DateStart, DateEnd);
+            var list = _sales.ToList();
+         
+                foreach (var sale in list)
                 {
-                    _report.Filter = FilterSale;
-                };
-                return _report;
-            }
+                    if (items.All(x => x.Id != sale.Id))
+                        _sales.Remove(sale);
+                }
+           
+                list = _sales.ToList();
+                foreach (var item in items)
+                {
+                    if (list.Any(x => x.Id == item.Id)) continue;
+                     _sales.Add(item);
+                }
+                
+           // Report.Refresh();
+            // OnPropertyChanged(nameof(Report));
         }
 
         private bool FilterSale(object o)
@@ -64,6 +80,7 @@ namespace SFC.Canteen.ViewModels
                     return;
                 _IncludeTopup = value;
                 OnPropertyChanged(nameof(IncludeTopup));
+                RefreshFilter();
             }
         }
 
@@ -78,6 +95,7 @@ namespace SFC.Canteen.ViewModels
                     return;
                 _IncludeSales = value;
                 OnPropertyChanged(nameof(IncludeSales));
+                RefreshFilter();
             }
         }
 
@@ -92,6 +110,7 @@ namespace SFC.Canteen.ViewModels
                     return;
                 _DateStart = value;
                 OnPropertyChanged(nameof(DateStart));
+                RefreshFilter();
             }
         }
 
@@ -106,6 +125,7 @@ namespace SFC.Canteen.ViewModels
                     return;
                 _DateEnd = value;
                 OnPropertyChanged(nameof(DateEnd));
+                RefreshFilter();
             }
         }
 
@@ -184,6 +204,57 @@ namespace SFC.Canteen.ViewModels
                 RefreshSummary();
             }
         }
+
+        private ICommand _printCommand;
+        public ICommand PrintCommand => _printCommand??(_printCommand = new DelegateCommand(d =>
+        {
+            if (!Directory.Exists("Temp"))
+                Directory.CreateDirectory("Temp");
+
+            var temp = Path.Combine("Temp", $"Sales Report [{DateTime.Now:yy-MMM-dd}].docx");
+            using (var doc = DocX.Load($@"Templates\SalesReport.docx"))
+            {
+                var tbl = doc.Tables.First();
+                var total = 0.0;
+                foreach (Models.Sale item in Report)
+                {
+                    total += item.Amount;
+                    var r = tbl.InsertRow();
+                    var top = item.Topup ? "T" : "S";
+                    var p = r.Cells[0].Paragraphs.First().Append($"{top}{item.Id:0000}");
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.center;
+
+                    p = r.Cells[1].Paragraphs.First().Append(item.Time.ToString("g"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.left;
+
+                    p = r.Cells[2].Paragraphs.First().Append(item.Customer.Fullname);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.left;
+
+                    p = r.Cells[3].Paragraphs.First().Append(item.Amount.ToString("#,##0.00"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+                }
+                
+                doc.ReplaceText("[TOTAL_AMOUNT]",total.ToString("#,##0.00"));
+                
+                var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
+                    System.Drawing.Color.Black);
+                tbl.SetBorder(TableBorderType.Bottom, border);
+                tbl.SetBorder(TableBorderType.Left, border);
+                tbl.SetBorder(TableBorderType.Right, border);
+                tbl.SetBorder(TableBorderType.Top, border);
+                tbl.SetBorder(TableBorderType.InsideV, border);
+                tbl.SetBorder(TableBorderType.InsideH, border);
+                File.Delete(temp);
+                doc.SaveAs(temp);
+            }
+            MainViewModel.Print(temp);
+        }));
+        
+        
 
         private void RefreshSummary()
         {

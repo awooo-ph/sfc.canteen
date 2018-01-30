@@ -197,6 +197,7 @@ namespace SFC.Canteen.ViewModels
             
             var sale = new Sale()
             {
+                UserId = MainViewModel.Instance.CurrentUser.Id,
                 CustomerId = Customer.Id,
                 Time = DateTime.Now,
                 Amount = TotalAmount

@@ -26,7 +26,7 @@
                         ToolBar.OverflowMode="Never"
                         VerticalAlignment="Center"
                         MinWidth="74"
-                        DisplayDateEnd="{Binding DateEnd}"
+                        DisplayDateEnd="{Binding DateEnd,Mode=OneWay}"
                         SelectedDate="{Binding DateStart}"
                         Margin="10 0"
                         md:HintAssist.IsFloating="True"/>
@@ -34,8 +34,8 @@
                         ToolBar.OverflowMode="Never"
                         VerticalAlignment="Center"
                         MinWidth="74"
-                        DisplayDateStart="{Binding DateStart}"
-                       
+                        DisplayDateStart="{Binding DateStart,Mode=OneWay}"
+                        DisplayDateEnd="{Binding Source={x:Static system:DateTime.Now},Path=Date,Mode=OneWay}"
                         SelectedDate="{Binding DateEnd}"
                         Margin="0 0 20 0"
                         md:HintAssist.IsFloating="True" />
@@ -46,19 +46,14 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Stretch">
                     <ListBoxItem Height="Auto" VerticalAlignment="Stretch"
-                                 IsSelected="{Binding IncludeTopup}"
-                                 md:ListBoxAssist.IsToggle="False">
+                                 IsSelected="{Binding IncludeTopup}">
                         <StackPanel Orientation="Horizontal">
                             <md:PackIcon Kind="Coin" VerticalAlignment="Center" />
                             <TextBlock Text=" TOPUP" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
-                </ListBox>
-                <ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
-                         VerticalAlignment="Center">
                     <ListBoxItem Height="Auto"
-                                 IsSelected="{Binding IncludeSales}"
-                                 md:ListBoxAssist.IsToggle="False">
+                                 IsSelected="{Binding IncludeSales}">
                         <StackPanel Orientation="Horizontal">
                             <md:PackIcon Kind="CartOutline" VerticalAlignment="Center" />
                             <TextBlock Text=" SALE" VerticalAlignment="Center"/>
@@ -70,7 +65,8 @@
             </ToolBar>
             
             <ToolBar>
-                <Button Content="{md:PackIcon Printer}" ToolTip="Print" ToolBar.OverflowMode="Never"/>
+                <Button Content="{md:PackIcon Printer}" ToolTip="Print" ToolBar.OverflowMode="Never"
+                        Command="{Binding PrintCommand}"/>
                 <Grid Visibility="Collapsed">
                     <Rectangle Fill="{StaticResource MaterialDesignFlatButtonClick}"
                                Visibility="{Binding ShowSummary,Converter={converters:BooleanToVisibility}}"/>

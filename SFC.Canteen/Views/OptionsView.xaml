@@ -12,6 +12,7 @@
         Title="Options" 
         SizeToContent="WidthAndHeight"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewModels1="clr-namespace:SFC.Canteen.ViewModels;assembly=SFC.Canteen.Data"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <TabControl x:Name="Tab">
@@ -75,7 +76,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=ModemPort}"
+                    <ComboBox Text="{Binding Source={x:Static properties:Settings.Default},Path=ModemPort}"
+                              IsEditable="True"
+                              ItemsSource="{Binding Source={x:Static viewModels1:SMS.Instance},Path=Ports}"
                              md:HintAssist.Hint="MODEM PORT"
                              md:HintAssist.IsFloating="True"
                              Margin="10" />

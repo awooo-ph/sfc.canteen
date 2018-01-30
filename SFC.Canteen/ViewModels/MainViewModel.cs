@@ -243,7 +243,7 @@ namespace SFC.Canteen.ViewModels
             var topVm = new TopupViewModel(c);
             if ((new TopUp() {DataContext = topVm}.ShowDialog() ?? false) && topVm.Credits>0 && topVm.Customer!=null)
             {
-                Sale.Create(topVm.Customer.Id, topVm.Credits, true).Save();
+                Sale.Create(CurrentUser.Id, topVm.Customer.Id, topVm.Credits, true).Save();
                 topVm.Customer.Update(nameof(topVm.Customer.Credits), topVm.Customer.Credits+topVm.Credits);
                 CustomerLog.Add(topVm.Customer.Id,$"Deposited Php {topVm.Credits:#,##0.00}.");
             }
@@ -531,7 +531,7 @@ namespace SFC.Canteen.ViewModels
             Print(temp);
         }
         
-        private static void Print(string path)
+        internal static void Print(string path)
         {
             var info = new ProcessStartInfo(path);
             info.CreateNoWindow = true;
