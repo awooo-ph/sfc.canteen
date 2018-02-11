@@ -92,7 +92,9 @@
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="Course" Binding="{Binding Course}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                <DataGridTemplateColumn Header="Credits" IsReadOnly="True" SortMemberPath="Credits">
+        <DataGridTextColumn Header="Course" Binding="{Binding ContactNumber}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTemplateColumn Header="Credits" IsReadOnly="True" SortMemberPath="Credits">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Credits,StringFormat={}#\,##0.00}" TextAlignment="Right"/>

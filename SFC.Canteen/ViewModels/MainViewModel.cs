@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using MaterialDesignThemes.Wpf;
 using SFC.Canteen.Models;
+using SFC.Canteen.Properties;
 using SFC.Canteen.Views;
 using Xceed.Words.NET;
 
@@ -243,9 +244,17 @@ namespace SFC.Canteen.ViewModels
             var topVm = new TopupViewModel(c);
             if ((new TopUp() {DataContext = topVm}.ShowDialog() ?? false) && topVm.Credits>0 && topVm.Customer!=null)
             {
-                Sale.Create(CurrentUser.Id, topVm.Customer.Id, topVm.Credits, true).Save();
+                var sale = Sale.Create(CurrentUser.Id, topVm.Customer.Id, topVm.Credits, true);
+                sale.Save();
                 topVm.Customer.Update(nameof(topVm.Customer.Credits), topVm.Customer.Credits+topVm.Credits);
                 CustomerLog.Add(topVm.Customer.Id,$"Deposited Php {topVm.Credits:#,##0.00}.");
+
+                var sms = Settings.Default.TopupMessage
+                    .Replace("[AMOUNT]", sale.Amount.ToString("#,##0.00"))
+                    .Replace("[CREDITS]", c.Credits.ToString("#,##0.00"))
+                    .Replace("[REF]", sale.Id.ToString());
+
+                SMS.Send(sms, c.ContactNumber);
             }
         },d=>d!=null));
 

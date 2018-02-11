@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using SFC.Canteen.Models;
+using SFC.Canteen.Properties;
 
 namespace SFC.Canteen.ViewModels
 {
@@ -224,6 +225,14 @@ namespace SFC.Canteen.ViewModels
             }
             CustomerLog.Add(Customer.Id,msg);
             Customer.Update(nameof(Customer.Credits),Customer.Credits-TotalAmount);
+
+            var sms = Settings.Default.CheckoutMessage
+                .Replace("[AMOUNT]",sale.Amount.ToString("#,##0.00"))
+                .Replace("[CREDITS]",Customer.Credits.ToString("#,##0.00"))
+                .Replace("[REF]",sale.Id.ToString());
+            
+            SMS.Send(sms,Customer.ContactNumber);
+            
             Items.Clear();
             Customer = null;
             OnPropertyChanged(nameof(Change));

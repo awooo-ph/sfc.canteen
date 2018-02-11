@@ -30,6 +30,7 @@ namespace SFC.Canteen.Views
                 {
                     RegButton.Visibility = Visibility.Visible;
                     CancelButton.Visibility = Visibility.Collapsed;
+                    ProgressBar.Visibility = Visibility.Collapsed;
                 },null);
             });
         }
