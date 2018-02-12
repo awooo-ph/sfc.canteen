@@ -1,0 +1,54 @@
+﻿<Window x:Class="SFC.Canteen.Views.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SFC.Canteen.Views"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        Title="About" Height="300" Width="555">
+    <StackPanel Margin="20">
+      
+      <TextBlock TextWrapping="Wrap" Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                 TextAlignment="Justify">
+            An individual cannot deny that technology unlocks a new possibilities and improved our ways of living. With the power of technology it opens new innovations, technologies, and opportunities to people. Every now and then technology gives continuous impact to the world, government, organization, society, community and every individual lives. Even business firms grasped this opportunity in advancing the way they conduct their business processes and used technologies to have an advantage strategy in competing other firms.
+          </TextBlock>
+      <TextBlock TextWrapping="Wrap" Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                 TextAlignment="Justify"
+                 Margin="0 10">    
+      A lot of people benefited through modern technologies not just innovating but also changing lives. Actually technology is inevitable, day by day technology is improving, by the help of technology we can create better and brighter future for each and every one. That’s why we create the <Run FontWeight="Bold">Saint Francis College Electronic Chits Load System</Run> to help our own school by making a smaller step to a bigger future.
+      </TextBlock>
+    <UniformGrid Rows="1">
+      <StackPanel Margin="10">
+        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center"/>
+        <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}"/>
+        <TextBlock Text="PROJECT MANAGER" TextAlignment="Center"/>
+      </StackPanel>
+      <StackPanel Margin="10">
+        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
+        <TextBlock Text="RESEARCHER" TextAlignment="Center" />
+      </StackPanel>
+      <StackPanel Margin="10">
+        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
+        <TextBlock Text="UX/UI Designer" TextAlignment="Center" />
+      </StackPanel>
+    </UniformGrid>
+    <UniformGrid Rows="1" HorizontalAlignment="Center">
+      <StackPanel Margin="10 0">
+        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
+        <TextBlock Text="PROGRAMMER" TextAlignment="Center" />
+      </StackPanel>
+      <StackPanel Margin="10 0">
+        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
+        <TextBlock Text="PROGRAMMER" TextAlignment="Center" />
+      </StackPanel>
+    </UniformGrid>
+  </StackPanel>
+</Window>

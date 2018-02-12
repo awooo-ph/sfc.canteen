@@ -103,9 +103,7 @@ namespace SFC.Canteen.ViewModels
                 Students.Filter = FilterStudents;
             }
         }
-
         
-
         private bool FilterStudents(object o)
         {
             var stud = (o as Customer)?.IsStudent??false;
@@ -237,6 +235,14 @@ namespace SFC.Canteen.ViewModels
 
         }));
 
+        private ICommand _ShowAboutCommand;
+
+        public ICommand ShowAboutCommand => _ShowAboutCommand ?? (_ShowAboutCommand = new DelegateCommand(d =>
+        {
+            var about = new About();
+            about.ShowDialog();
+        }));
+
         private ICommand _topupCommand;
 
         public ICommand TopupCommand => _topupCommand ?? (_topupCommand = new DelegateCommand<Customer>(c =>
@@ -320,6 +326,8 @@ namespace SFC.Canteen.ViewModels
 
         private bool FilterProducts(object o)
         {
+            if (string.IsNullOrEmpty(ProductsKeyword)) return true;
+            if ((o as Product)?.Code.ToLower().Contains(ProductsKeyword.ToLower())??false) return true;
             return string.IsNullOrEmpty(ProductsKeyword) ||
                    ((o as Product)?.Description.Contains(ProductsKeyword) ?? false);
         }
