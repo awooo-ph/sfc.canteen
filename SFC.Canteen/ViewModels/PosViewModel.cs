@@ -182,8 +182,8 @@ namespace SFC.Canteen.ViewModels
             if (d == null) d = AddProduct;
             return Customer != null && d != null &&
                                                             d.Quantity >= Quantity &&
-                                                            d.Price * Quantity + TotalAmount <=
-                                                            Customer.Credits;
+                                                            (d.Price * Quantity + TotalAmount <=
+                                                            Customer.Credits || !Customer.IsStudent);
         }));
 
         private ICommand _checkoutCommand;
