@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             Background="DarkGray"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
              xmlns:converters="clr-namespace:SFC.Canteen.Converters"
@@ -92,7 +93,7 @@
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="Course" Binding="{Binding Course}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-        <DataGridTextColumn Header="Course" Binding="{Binding ContactNumber}"
+        <DataGridTextColumn Header="Contact Number" Binding="{Binding ContactNumber}"
                             EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
         <DataGridTemplateColumn Header="Credits" IsReadOnly="True" SortMemberPath="Credits">
                     <DataGridTemplateColumn.CellTemplate>

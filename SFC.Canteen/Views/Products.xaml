@@ -8,6 +8,7 @@
              xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
              xmlns:converters="clr-namespace:SFC.Canteen.Converters"
              mc:Ignorable="d" 
+             Background="DarkGray"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>

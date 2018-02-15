@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SFC.Canteen"
         mc:Ignorable="d"
+       
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm="clr-namespace:SFC.Canteen.ViewModels"
         xmlns:views="clr-namespace:SFC.Canteen.Views"
@@ -38,13 +39,13 @@
     <KeyBinding Key="F1" Command="{Binding RunExternalCommand}"
                     CommandParameter="https://github.com/awooo-ph/sfc.canteen/wiki" />
   </Window.InputBindings>
-  <Grid x:Name="Grid">
+  <Grid x:Name="Grid" Background="DarkGray">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <Menu HorizontalAlignment="Left">
+    <Menu HorizontalAlignment="Left" Background="DarkGray">
       <MenuItem Header="_File">
         <MenuItem Header="New">
           <MenuItem Header="_Student" Command="{Binding NewStudentCommand}" />
@@ -215,7 +216,9 @@
           <TextBlock Text="{Binding Products.Count}" />
         </StackPanel>
       </StatusBarItem>
-      <StatusBarItem HorizontalAlignment="Stretch"/>
+      <StatusBarItem HorizontalAlignment="Stretch">
+        <TextBlock Text="{Binding Status}" Margin="20 0" VerticalAlignment="Center"/>
+      </StatusBarItem>
       <StatusBarItem HorizontalAlignment="Right" Margin="10 0">
         <StackPanel Orientation="Horizontal">
           <md:PackIcon Kind="Account" Margin="0 0 5 0" />

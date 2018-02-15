@@ -24,7 +24,8 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
-        </Grid.RowDefinitions>
+      <RowDefinition />
+    </Grid.RowDefinitions>
 
         <TextBlock Text="RFID: " VerticalAlignment="Center" Margin="10" />
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding RFID,UpdateSourceTrigger=PropertyChanged}"
@@ -51,8 +52,11 @@
                    Visibility="{Binding IsStudent,Converter={converters:BooleanToVisibility Collapsed,Visible}}" />
         <TextBox Grid.Column="1" Grid.Row="4" Margin="10" Text="{Binding Course,UpdateSourceTrigger=PropertyChanged}" />
 
-        
-            <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
+    <TextBlock Text="Contact Number: " VerticalAlignment="Center" Grid.Column="0" Grid.Row="5" Margin="10"
+                />
+      <TextBox Grid.Column="1" Grid.Row="5" Margin="10" Text="{Binding ContactNumber,UpdateSourceTrigger=PropertyChanged}" />
+
+    <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
                    Margin="10" Grid.Column="2" Grid.RowSpan="5" 
                    Height="222"
                    Stretch="UniformToFill"

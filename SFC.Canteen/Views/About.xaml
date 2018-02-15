@@ -23,31 +23,31 @@
       </TextBlock>
     <UniformGrid Rows="1">
       <StackPanel Margin="10">
-        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center"/>
+        <TextBlock Text="Kyle Niño Evangelista" TextAlignment="Center"/>
         <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}"/>
         <TextBlock Text="PROJECT MANAGER" TextAlignment="Center"/>
       </StackPanel>
       <StackPanel Margin="10">
-        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <TextBlock Text="Riche G. Trinidad" TextAlignment="Center" />
         <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
         <TextBlock Text="RESEARCHER" TextAlignment="Center" />
       </StackPanel>
       <StackPanel Margin="10">
-        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <TextBlock Text="Jeford S. Mananquil" TextAlignment="Center" />
         <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
-        <TextBlock Text="UX/UI Designer" TextAlignment="Center" />
+        <TextBlock Text="TESTER" TextAlignment="Center" />
       </StackPanel>
     </UniformGrid>
     <UniformGrid Rows="1" HorizontalAlignment="Center">
       <StackPanel Margin="10 0">
-        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <TextBlock Text="Ruel M. Peñarubia" TextAlignment="Center" />
         <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
         <TextBlock Text="PROGRAMMER" TextAlignment="Center" />
       </StackPanel>
       <StackPanel Margin="10 0">
-        <TextBlock Text="FIRST NAME LAST NAME" TextAlignment="Center" />
+        <TextBlock Text="Kyle Niño Evangelista" TextAlignment="Center" />
         <Rectangle Height="1" Fill="{StaticResource MaterialDesignLightForeground}" />
-        <TextBlock Text="PROGRAMMER" TextAlignment="Center" />
+        <TextBlock Text="SYSTEM ANALYST" TextAlignment="Center" />
       </StackPanel>
     </UniformGrid>
   </StackPanel>
