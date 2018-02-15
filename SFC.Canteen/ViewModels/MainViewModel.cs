@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -34,8 +35,44 @@ namespace SFC.Canteen.ViewModels
                 PosViewModel.Customer = customer;
                 PosViewModel.IsTransactionStarted = true;
             });
+            
+            Messenger.Default.AddListener<string>(Messages.SMS, msg =>
+            {
+                awooo.Context.Post(d =>
+                {
+                    Status = msg;
+                    _statusUpdated = DateTime.Now;
+
+                    Task.Factory.StartNew(async () =>
+                    {
+                        while ((DateTime.Now - _statusUpdated).TotalMilliseconds < 7777)
+                            await TaskEx.Delay(111);
+                        awooo.Context.Post(dd =>
+                        {
+                            Status = null;
+                        },null);
+                    });
+                },null);
+                
+            });
         }
 
+        private DateTime _statusUpdated = DateTime.Now;
+        
+        private string _Status;
+
+        public string Status
+        {
+            get => _Status;
+            set
+            {
+                if(value == _Status)
+                    return;
+                _Status = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+        
         private static MainViewModel _instance;
         public static MainViewModel Instance => _instance ?? (_instance = new MainViewModel());
 
@@ -108,6 +145,7 @@ namespace SFC.Canteen.ViewModels
         {
             var stud = (o as Customer)?.IsStudent??false;
             if (!stud) return false;
+            if ((o as Customer).RFID?.ToLower().Contains(StudentsKeyword?.ToLower()??"")??false) return true;
             return string.IsNullOrEmpty(StudentsKeyword) ||
                    ((o as Customer)?.Fullname.Contains(StudentsKeyword) ?? false);
         }
@@ -407,7 +445,7 @@ namespace SFC.Canteen.ViewModels
             
             PosViewModel.Customer = c;
             SelectedTab = POS;
-        },d=> !PosViewModel.IsTransactionStarted && d?.Credits>0));
+        },d=> !PosViewModel.IsTransactionStarted));
 
         private PosViewModel _PosViewModel = new PosViewModel(null);
 
