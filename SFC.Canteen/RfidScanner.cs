@@ -48,16 +48,16 @@ namespace SFC.Canteen
 
             if (IsWaitingForScanner)
             {
-                Settings.Default.ScannerId = GetScannerId(e.Device);
-                Settings.Default.ScannerName = e.Device.Description.ToString();
+                Settings.Default.ScannerId = e.Device.Name;
+                Settings.Default.ScannerName = e.Device.Description;
                 Settings.Default.Save();
                 IsWaitingForScanner = false;
                 Messenger.Default.Broadcast(Messages.ScannerRegistered);
                 _input.Clear();
                 return;
             }
-
-            if (GetScannerId(e.Device) == Settings.Default.ScannerId)
+            var scanner = Settings.Default.ScannerId;
+            if (scanner == e.Device.Name)
             {
                 if (e.KeyPressState != KeyPressState.Down) return;
                 if (e.Key != Key.Enter)
