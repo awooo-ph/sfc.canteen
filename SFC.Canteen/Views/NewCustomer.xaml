@@ -28,7 +28,7 @@
     </Grid.RowDefinitions>
 
         <TextBlock Text="RFID: " VerticalAlignment="Center" Margin="10" />
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding RFID,UpdateSourceTrigger=PropertyChanged}"
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding RFID,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
                  Margin="10" />
 
         <TextBlock Text="First Name: " VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="10" />
@@ -54,7 +54,7 @@
 
     <TextBlock Text="Contact Number: " VerticalAlignment="Center" Grid.Column="0" Grid.Row="5" Margin="10"
                 />
-      <TextBox Grid.Column="1" Grid.Row="5" Margin="10" Text="{Binding ContactNumber,UpdateSourceTrigger=PropertyChanged}" />
+      <TextBox Grid.Column="1" Grid.Row="5" Margin="10" Text="{Binding ContactNumber,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" />
 
     <Image Source="{Binding Picture,Converter={converters:BytesToImage}}"
                    Margin="10" Grid.Column="2" Grid.RowSpan="5" 

@@ -45,6 +45,23 @@ namespace SFC.Canteen
             
         }
 
+        public static byte[] ResizeImage(string file)
+        {
+            if (!File.Exists(file))
+                return null;
+            using (var img = System.Drawing.Image.FromFile(file))
+            {
+                using (var bmp = Resize(img, 777, Color.White))
+                {
+                    using (var bin = new MemoryStream())
+                    {
+                        bmp.Save(bin, ImageFormat.Jpeg);
+                        return bin.ToArray();
+                    }
+                }
+            }
+        }
+
         public static Image Resize(Image imgPhoto, int size)
         {
             return Resize(imgPhoto, size, Color.White);
