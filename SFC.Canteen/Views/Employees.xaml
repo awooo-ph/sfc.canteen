@@ -46,6 +46,9 @@
                   Grid.ColumnSpan="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:BooleanToObject 1,2}}"
                   AutoGenerateColumns="False"
                   ClipboardCopyMode="None"
+                  AllowDrop="True"
+                  PreviewDrop="StudentsDrop"
+                  PreviewDragOver="StudentsDragEnter"
                   VerticalContentAlignment="Center"
                   Grid.IsSharedSizeScope="True"
                   CanUserAddRows="False" SelectionMode="Single"
@@ -88,7 +91,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="RFID" Binding="{Binding RFID}"
+        <DataGridTextColumn Header="RFID" Binding="{Binding RFID,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
@@ -96,7 +99,7 @@
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="Job" Binding="{Binding Course}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-        <DataGridTextColumn Header="Contact Number" Binding="{Binding ContactNumber}"
+        <DataGridTextColumn Header="Contact Number" Binding="{Binding ContactNumber,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                             EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
         <DataGridTemplateColumn Header="Credits" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>

@@ -50,6 +50,9 @@
                   VerticalContentAlignment="Center"
                   Grid.ColumnSpan="{Binding ElementName=ToggleButton,Path=IsSelected,Converter={converters:BooleanToObject 1,2}}"
                   HeadersVisibility="Column"
+                  AllowDrop="True"
+                  PreviewDrop="StudentsDrop"
+                  PreviewDragOver="StudentsDragEnter"
                   CanUserDeleteRows="False">
             <DataGrid.ItemContainerStyle>
                 <Style TargetType="DataGridRow">
@@ -86,14 +89,14 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="RFID" Binding="{Binding RFID}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
+                <DataGridTextColumn Header="RFID" Binding="{Binding RFID,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                 <DataGridTextColumn Header="First Name" Binding="{Binding Firstname}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="Last Name" Binding="{Binding Lastname}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 <DataGridTextColumn Header="Course" Binding="{Binding Course}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-        <DataGridTextColumn Header="Contact Number" Binding="{Binding ContactNumber}"
+        <DataGridTextColumn Header="Contact Number" Binding="{Binding ContactNumber,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"
                             EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
         <DataGridTemplateColumn Header="Credits" IsReadOnly="True" SortMemberPath="Credits">
                     <DataGridTemplateColumn.CellTemplate>
