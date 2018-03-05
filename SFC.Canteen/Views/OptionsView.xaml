@@ -77,7 +77,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel>
                   
-                    <ComboBox Text="{Binding Source={x:Static properties:Settings.Default},Path=ModemPort}"
+                    <ComboBox Text="{Binding Source={x:Static properties:Settings.Default},Path=Port}"
                               IsEditable="True"
                               ItemsSource="{Binding Source={x:Static viewModels1:SMS.Instance},Path=Ports}"
                              md:HintAssist.Hint="MODEM PORT"
