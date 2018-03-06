@@ -187,6 +187,8 @@ namespace SFC.Canteen.ViewModels
         {
             var emp = !((o as Customer)?.IsStudent ?? false);
             if (!emp) return false;
+            if (!(o is Customer e)) return false;
+            if (e.RFID?.ToLower().Contains(EmployeesKeyword?.ToLower() ?? "")??false) return true;
             return string.IsNullOrEmpty(EmployeesKeyword) || 
                    ((o as Customer)?.Fullname.Contains(EmployeesKeyword)??false);
         }
