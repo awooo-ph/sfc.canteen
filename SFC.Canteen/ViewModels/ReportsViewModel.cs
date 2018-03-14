@@ -78,9 +78,63 @@ namespace SFC.Canteen.ViewModels
 
             if (sale.Time.Date < DateStart.Date) return false;
             if (sale.Time.Date > DateEnd.Date) return false;
+
+            if (FilterSessions)
+            {
+                return Sessions?.Any(x => x.Id == sale.UserId && x.IsSelected)??false;
+            }
+            
             return true;
         }
 
+        private bool _FilterSessions = true;
+
+        public bool FilterSessions
+        {
+            get => _FilterSessions;
+            set
+            {
+                if (value == _FilterSessions) return;
+                _FilterSessions = value;
+                OnPropertyChanged(nameof(FilterSessions));
+                RefreshFilter();
+            }
+        }
+
+
+        private ObservableCollection<User> _Sessions;
+
+        public ObservableCollection<User> Sessions
+        {
+            get => _Sessions;
+            private set
+            {
+                if (value == _Sessions) return;
+                _Sessions = value;
+                OnPropertyChanged(nameof(Sessions));
+            }
+        }
+        
+        private void RefreshSessions()
+        {
+            Sessions = new ObservableCollection<User>();
+            Session.Cache.ToList().ForEach(s =>
+            {
+                if (Sessions.Any(x => x.Id == s.UserId)) return;
+                if (s.TimeOut.Date < DateStart) return;
+                if (s.TimeIn.Date > DateEnd) return;
+                Sessions.Add(s.User);
+            });
+        }
+
+        private ICommand _toggleSessionsCommand;
+
+        public ICommand ToggleSessionsCommand =>
+            _toggleSessionsCommand ?? (_toggleSessionsCommand = new DelegateCommand(
+                d =>
+                {
+                    FilterSessions = !FilterSessions;
+                }));
 
         private bool _IncludeTopup;
 
@@ -124,6 +178,7 @@ namespace SFC.Canteen.ViewModels
                 _DateStart = value;
                 OnPropertyChanged(nameof(DateStart));
                 RefreshFilter();
+                RefreshSessions();
             }
         }
 
@@ -139,6 +194,7 @@ namespace SFC.Canteen.ViewModels
                 _DateEnd = value;
                 OnPropertyChanged(nameof(DateEnd));
                 RefreshFilter();
+                RefreshSessions();
             }
         }
 

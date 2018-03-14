@@ -102,6 +102,28 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+      <GroupBox Header="USERS" Grid.Row="0" Grid.RowSpan="2"
+              >
+        <ListBox ItemsSource="{Binding Source={x:Static models:User.Cache}}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox IsChecked="{Binding IsSelected}"
+                          VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"
+                           VerticalAlignment="Center"
+                           Margin="4 0 0 0"/>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </GroupBox>
+          
         <DataGrid ItemsSource="{Binding Report}"
                   Grid.Column="1"
                   Grid.RowSpan="2"
