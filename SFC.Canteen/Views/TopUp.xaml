@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"
-        Title="Top Up" SizeToContent="WidthAndHeight">
+        Title="Add Credits" SizeToContent="WidthAndHeight">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

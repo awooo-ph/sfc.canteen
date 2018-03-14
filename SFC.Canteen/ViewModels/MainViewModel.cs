@@ -293,7 +293,7 @@ namespace SFC.Canteen.ViewModels
                 var sale = Sale.Create(CurrentUser.Id, topVm.Customer.Id, topVm.Credits, true);
                 sale.Save();
                 topVm.Customer.Update(nameof(topVm.Customer.Credits), topVm.Customer.Credits+topVm.Credits);
-                CustomerLog.Add(topVm.Customer.Id,$"Deposited Php {topVm.Credits:#,##0.00}.");
+                CustomerLog.Add(topVm.Customer.Id, CurrentUser.Id, $"Deposited Php {topVm.Credits:#,##0.00}.");
 
                 var sms = Settings.Default.TopupMessage
                     .Replace("[AMOUNT]", sale.Amount.ToString("#,##0.00"))
@@ -613,7 +613,7 @@ namespace SFC.Canteen.ViewModels
 
         public ICommand PrintLogCommand => _printLogCommand ?? (_printLogCommand = new DelegateCommand<Customer>(d =>
         {
-            PrintLog(d.RFID,d.Fullname,d.Logs.SourceCollection.Cast<ILog>());
+            PrintLog(d.RFID,d.Fullname,d.Logs.Cast<ILog>());
         },d=>d!=null && d?.Logs.Count>0));
 
         private void PrintLog(string id, string name, IEnumerable<ILog> logs)
@@ -638,6 +638,10 @@ namespace SFC.Canteen.ViewModels
                     p = r.Cells[1].Paragraphs.First().Append(item.Message);
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.left;
+
+                    p = r.Cells[2].Paragraphs.First().Append(item.User?.Name);
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.center;
 
                 }
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,

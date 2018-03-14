@@ -223,7 +223,7 @@ namespace SFC.Canteen.ViewModels
             {
                 msg = $"Bought {Items.Count} items for {sale.Amount:#,##0.00}. REF#{sale.Id}";
             }
-            CustomerLog.Add(Customer.Id,msg);
+            CustomerLog.Add(Customer.Id,MainViewModel.Instance.CurrentUser.Id,msg);
             Customer.Update(nameof(Customer.Credits),Customer.Credits-TotalAmount);
 
             var sms = Settings.Default.CheckoutMessage
