@@ -367,9 +367,11 @@ namespace SFC.Canteen.ViewModels
         private bool FilterProducts(object o)
         {
             if (string.IsNullOrEmpty(ProductsKeyword)) return true;
-            if ((o as Product)?.Code.ToLower().Contains(ProductsKeyword.ToLower())??false) return true;
-            return string.IsNullOrEmpty(ProductsKeyword) ||
-                   ((o as Product)?.Description.Contains(ProductsKeyword) ?? false);
+
+            if (!(o is Product p)) return false;
+            
+            if (p.Code?.ToLower().Contains(ProductsKeyword.ToLower()) ?? false) return true;
+            return p.Description?.ToLower().Contains(ProductsKeyword.ToLower()) ?? false;
         }
 
         private ICommand _newProductCommand;
