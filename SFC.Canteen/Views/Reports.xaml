@@ -8,6 +8,7 @@
              xmlns:viewModels="clr-namespace:SFC.Canteen.ViewModels"
              xmlns:converters="clr-namespace:SFC.Canteen.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:SFC.Canteen.Models;assembly=SFC.Canteen.Data"
              mc:Ignorable="d" 
              DataContext="{Binding Source={x:Static viewModels:ReportsViewModel.Instance}}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -41,7 +42,7 @@
                         md:HintAssist.IsFloating="True" />
 
 
-                <ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
+                <!--<ListBox Style="{StaticResource MaterialDesignToolToggleFlatListBox}"
                          Height="Auto"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Stretch">
@@ -49,17 +50,17 @@
                                  IsSelected="{Binding IncludeTopup}">
                         <StackPanel Orientation="Horizontal">
                             <md:PackIcon Kind="Coin" VerticalAlignment="Center" />
-                            <TextBlock Text=" TOPUP" VerticalAlignment="Center"/>
+                            <TextBlock Text=" DEPOSITS" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Height="Auto"
                                  IsSelected="{Binding IncludeSales}">
                         <StackPanel Orientation="Horizontal">
                             <md:PackIcon Kind="CartOutline" VerticalAlignment="Center" />
-                            <TextBlock Text=" SALE" VerticalAlignment="Center"/>
+                            <TextBlock Text=" SALES" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListBoxItem>
-                </ListBox>
+        </ListBox>-->
                 
 
             </ToolBar>
@@ -81,12 +82,20 @@
                             Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         Command="{Binding ToggleDetailsCommand}"/>
                     </Grid>
-            </ToolBar>
+        <!--<Grid>
+          <Rectangle Fill="{StaticResource MaterialDesignFlatButtonClick}"
+                     Visibility="{Binding FilterSessions,Converter={converters:BooleanToVisibility}}" />
+          <Button Content="{md:PackIcon AccountMultipleOutline}" ToolTip="Filter by User"
+                  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                  Command="{Binding ToggleSessionsCommand}" />
+        </Grid>-->
+      </ToolBar>
         </ToolBarTray>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -94,6 +103,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
         <DataGrid ItemsSource="{Binding Report}"
+                  Grid.Column="1"
                   Grid.RowSpan="2"
                   SelectionMode="Single"
                   AutoGenerateColumns="False"
@@ -147,7 +157,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-            <GroupBox Header="SALE DETAILS" Grid.Column="1" Grid.Row="0"
+            <GroupBox Header="SALE DETAILS" Grid.Column="2" Grid.Row="0"
                       Grid.RowSpan="{Binding DetailsRowSpan}"
                       Visibility="{Binding ShowDetails,Converter={converters:BooleanToVisibility}}">
                 <DataGrid ItemsSource="{Binding Report/Items}" AutoGenerateColumns="False"

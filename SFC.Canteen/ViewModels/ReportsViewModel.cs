@@ -24,42 +24,55 @@ namespace SFC.Canteen.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
            
         }
-        
-        private ReportsViewModel() { }
+
+        private ReportsViewModel()
+        {
+            Messenger.Default.AddListener<User>(Messages.ModelSelected, session =>
+            {
+                RefreshFilter();
+            });
+        }
         private static ReportsViewModel _instance;
         public static ReportsViewModel Instance => _instance ?? (_instance = new ReportsViewModel());
 
         private ListCollectionView _report;
-        private ObservableCollection<Sale> _sales = new ObservableCollection<Sale>();
-        public ListCollectionView Report => _report ?? (_report = new ListCollectionView(_sales));
-
+        //private ObservableCollection<Sale> _sales = new ObservableCollection<Sale>();
+        public ListCollectionView Report
+        {
+            get
+            {
+                if (_report != null) return _report;
+                _report = new ListCollectionView(Sale.Cache);
+                _report.Filter = FilterSale;
+                return _report;
+            }
+        }
+        
         private void RefreshFilter()
         {
             
-            var items = Sale.Where(IncludeSales, IncludeTopup, DateStart, DateEnd);
-            var list = _sales.ToList();
+            //var items = Sale.Where(IncludeSales, IncludeTopup, DateStart, DateEnd);
+            //var list = _sales.ToList();
          
-                foreach (var sale in list)
-                {
-                    if (items.All(x => x.Id != sale.Id))
-                        _sales.Remove(sale);
-                }
+            //    foreach (var sale in list)
+            //    {
+            //        if (items.All(x => x.Id != sale.Id))
+            //            _sales.Remove(sale);
+            //    }
            
-                list = _sales.ToList();
-                foreach (var item in items)
-                {
-                    if (list.Any(x => x.Id == item.Id)) continue;
-                     _sales.Add(item);
-                }
-                
-           // Report.Refresh();
+            //    list = _sales.ToList();
+            //    foreach (var item in items)
+            //    {
+            //        if (list.Any(x => x.Id == item.Id)) continue;
+            //         _sales.Add(item);
+            //    }
+            Report.Refresh();
             // OnPropertyChanged(nameof(Report));
         }
 
         private bool FilterSale(object o)
         {
-            var sale = o as Models.Sale;
-            if (sale == null) return false;
+            if (!(o is Sale sale)) return false;
             if (IncludeSales && !IncludeTopup && sale.Topup) return false;
             if (IncludeTopup && !IncludeSales && !sale.Topup) return false;
 
@@ -128,6 +141,7 @@ namespace SFC.Canteen.ViewModels
                 RefreshFilter();
             }
         }
+
 
         private ICommand _toggleDetailsCommand;
 
@@ -215,31 +229,64 @@ namespace SFC.Canteen.ViewModels
             using (var doc = DocX.Load($@"Templates\SalesReport.docx"))
             {
                 var tbl = doc.Tables.First();
+                var deposits = 0.0;
+                var receivables = 0.0;
                 var total = 0.0;
-                foreach (Models.Sale item in Report)
+                var ids = new List<long>();
+                var sales = Report.Cast<Sale>().OrderBy(x => x.CustomerId).ToList();
+                foreach (var item in sales)
                 {
-                    total += item.Amount;
+                    
+                    if (ids.Contains(item.CustomerId)) continue;
+                    ids.Add(item.CustomerId);
+                    
                     var r = tbl.InsertRow();
-                    var top = item.Topup ? "T" : "S";
-                    var p = r.Cells[0].Paragraphs.First().Append($"{top}{item.Id:0000}");
-                    p.LineSpacingAfter = 0;
-                    p.Alignment = Alignment.center;
-
-                    p = r.Cells[1].Paragraphs.First().Append(item.Time.ToString("g"));
+                    
+                    var p = r.Cells[0].Paragraphs.First().Append(item.Customer.Fullname);
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.left;
 
-                    p = r.Cells[2].Paragraphs.First().Append(item.Customer.Fullname);
-                    p.LineSpacingAfter = 0;
-                    p.Alignment = Alignment.left;
-
-                    p = r.Cells[3].Paragraphs.First().Append(item.Amount.ToString("#,##0.00"));
-                    p.LineSpacingAfter = 0;
-                    p.Alignment = Alignment.right;
+                    var dep = sales.Where(x => x.Topup && x.CustomerId == item.CustomerId).Sum(x => x.Amount);
+                    if (dep > 0)
+                    {
+                        deposits += dep;
+                        p = r.Cells[1].Paragraphs.First().Append(dep.ToString("0.00"));
+                        p.LineSpacingAfter = 0;
+                        p.Alignment = Alignment.right;
+                    }
+                    
+                    if (item.Customer.Credits < 0)
+                    {
+                        p = r.Cells[2].Paragraphs.First().Append(Math.Abs(item.Customer.Credits).ToString("0.00"));
+                        receivables += Math.Abs(item.Customer.Credits);
+                        p.LineSpacingAfter = 0;
+                        p.Alignment = Alignment.right;
+                    }
+                    
+                    dep = sales.Where(x => !x.Topup && x.CustomerId == item.CustomerId)
+                        .Sum(x => x.Amount);
+                    if (dep > 0)
+                    {
+                        total += dep;
+                        p = r.Cells[3].Paragraphs.First().Append(dep.ToString("0.00"));
+                        p.LineSpacingAfter = 0;
+                        p.Alignment = Alignment.right;
+                    }
+                    
                 }
                 
-                doc.ReplaceText("[TOTAL_AMOUNT]",total.ToString("#,##0.00"));
-                
+                doc.ReplaceText("[DEPOSITS]",deposits.ToString("#,##0.00"));
+                doc.ReplaceText("[RECEIVABLES]", receivables.ToString("#,##0.00"));
+                doc.ReplaceText("[SALES]", total.ToString("#,##0.00"));
+                doc.ReplaceText("[TRANSACTIONS]", sales.Count.ToString("#,##0"));
+
+                var date = DateStart.ToString("MMM d, yyyy");
+                if (DateStart.Date != DateEnd.Date)
+                {
+                    date += " - " + DateEnd.ToString("MMM d, yyyy");
+                }
+                doc.ReplaceText("[DATE]",date);
+
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
                     System.Drawing.Color.Black);
                 tbl.SetBorder(TableBorderType.Bottom, border);
