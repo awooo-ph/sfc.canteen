@@ -79,7 +79,11 @@
       <MenuItem Header="_Edit"
                       Visibility="{Binding ElementName=EmployeesTab,Path=IsSelected,Converter={converters:BooleanToVisibility}}">
         <MenuItem Header="Add Credits" ToolTip="Add credits" Command="{Binding TopupCommand}"
+                  Visibility="{Binding Employees/Utangan,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                           CommandParameter="{Binding Employees/}" />
+        <MenuItem Header="Pay Full" Command="{Binding PayFullCommand}"
+                  Visibility="{Binding Employees/Utangan,Converter={converters:BooleanToVisibility}}"
+                  CommandParameter="{Binding Employees/}" />
         <MenuItem Header="Start Sales" Command="{Binding StartSalesCommand}"
                           CommandParameter="{Binding Employees/}" InputGestureText="F4" />
         <Separator />

@@ -302,7 +302,28 @@ namespace SFC.Canteen.ViewModels
 
                 SMS.Send(sms, c.ContactNumber);
             }
-        },d=>d!=null));
+        },d=>
+        {
+            if (d == null) return false;
+
+            if (d.IsStudent) return CurrentUser?.StudentsAdmin ?? false;
+            if (!d.IsStudent) return CurrentUser?.EmployeesAdmin ?? false;
+            
+            return true;
+        }));
+
+        private ICommand _payFullCommand;
+
+        public ICommand PayFullCommand => _payFullCommand ?? (_payFullCommand = new DelegateCommand<Customer>(d =>
+        {
+            CustomerLog.Add(d.Id,CurrentUser.Id, $"Full payment of {Math.Abs(d.Credits):#,##0.00}.");
+            
+            SMS.Send($"You have paid a total amount of {Math.Abs(d.Credits):#,##0.00}.", d.ContactNumber);
+            
+            var sale = Sale.Create(CurrentUser.Id, d.Id,Math.Abs(d.Credits), true);
+            sale.Save();
+            d.Update(nameof(Customer.Credits), 0.0);
+        },d=>d!=null && d.Utangan));
 
         private ICommand _showCustomerCommand;
 

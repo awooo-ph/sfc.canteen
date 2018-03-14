@@ -59,10 +59,15 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
-                                <MenuItem Header="Add Credits" ToolTip="Add credits"
+                                <MenuItem Header="Add Credits"
                                           Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=TopupCommand}"
-                                          CommandParameter="{Binding}" />
-                                <MenuItem Header="Start Sales"
+                                          CommandParameter="{Binding}" 
+                                          Visibility="{Binding Utangan,Converter={converters:BooleanToVisibility Collapsed,Visible}}"/>
+                <MenuItem Header="Pay Full" 
+                          Command="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=PayFullCommand}"
+                          CommandParameter="{Binding}"
+                          Visibility="{Binding Utangan,Converter={converters:BooleanToVisibility}}" />
+                <MenuItem Header="Start Sales"
                                           Command="{Binding  Source={x:Static viewModels:MainViewModel.Instance},Path=StartSalesCommand}"
                                           CommandParameter="{Binding}" />
                                 <Separator />
