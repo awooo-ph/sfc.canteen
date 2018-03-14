@@ -549,7 +549,23 @@ namespace SFC.Canteen.ViewModels
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
 
-                    p = r.Cells[3].Paragraphs.First().Append(item.Quantity.ToString("#,##0.00"));
+                    p = r.Cells[3].Paragraphs.First().Append(item.Quantity.ToString("#,##0.##"));
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+
+                    p = r.Cells[4].Paragraphs.First().Append(
+                        SaleItem.Cache
+                            .Where(x => x.ProductId == item.Id)
+                            .Sum(x=>x.Quantity).ToString("#,##0.##")
+                    );
+                    p.LineSpacingAfter = 0;
+                    p.Alignment = Alignment.right;
+
+                    p = r.Cells[5].Paragraphs.First().Append(
+                        SaleItem.Cache
+                            .Where(x => x.ProductId == item.Id)
+                            .Sum(x => x.Amount).ToString("#,##0.00")
+                    );
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
                 }
@@ -627,17 +643,53 @@ namespace SFC.Canteen.ViewModels
             _printProductLogCommand ?? (_printProductLogCommand = new DelegateCommand<Product>(
                 d =>
                 {
-                    PrintLog(d.Code, d.Description, d.Logs.SourceCollection.Cast<ILog>());
+                    var summary = new LogSummary()
+                    {
+                        R_NAME = "Stocks",
+                        R_VALUE = d.Quantity.ToString("0.00"),
+                        SUM_1 = "Quantity Sold",
+                        SUM_2 = "Total Sales",
+                        SUM_3 = "Transactions",
+                        VALUE_1 = SaleItem.Cache.Where(x => x.ProductId == d.Id).Sum(x => x.Quantity).ToString("0"),
+                        VALUE_2 = SaleItem.Cache.Where(x => x.ProductId == d.Id).Sum(x => x.Amount).ToString("0.00"),
+                        VALUE_3 = SaleItem.Cache.Count(x => x.ProductId == d.Id).ToString("0")
+                    };
+                    
+                    PrintLog(d.Code, d.Description, d.Logs.Cast<ILog>(),summary);
                 },d=> d!=null && d.Logs.Count>0));
 
         private ICommand _printLogCommand;
 
         public ICommand PrintLogCommand => _printLogCommand ?? (_printLogCommand = new DelegateCommand<Customer>(d =>
         {
-            PrintLog(d.RFID,d.Fullname,d.Logs.Cast<ILog>());
+            
+            var summary = new LogSummary()
+            {
+                R_NAME = "Credits",
+                R_VALUE = d.Credits.ToString("0.00"),
+                SUM_1 = "Total Deposits",
+                SUM_2 = "Total Sales",
+                SUM_3 = "Transactions",
+                VALUE_1 = Sale.Cache.Where(x=>x.CustomerId == d.Id && x.Topup).Sum(x=>x.Amount).ToString("0.00"),
+                VALUE_2 = Sale.Cache.Where(x => x.CustomerId == d.Id && !x.Topup).Sum(x => x.Amount).ToString("0.00"),
+                VALUE_3 = Sale.Cache.Count(x=>x.CustomerId == d.Id).ToString("0")
+            };
+            PrintLog(d.RFID,d.Fullname,d.Logs.Cast<ILog>(),summary);
         },d=>d!=null && d?.Logs.Count>0));
 
-        private void PrintLog(string id, string name, IEnumerable<ILog> logs)
+        class LogSummary
+        {
+            public string R_NAME { get; set; } = "";
+            public string R_VALUE { get; set; } = "";
+            public string SUM_1 { get; set; } = "";
+            public string SUM_2 { get; set; } = "";
+            public string SUM_3 { get; set; } = "";
+            public string VALUE_1 { get; set; } = "";
+            public string VALUE_2 { get; set; } = "";
+            public string VALUE_3 { get; set; } = "";
+        }
+        
+        private void PrintLog(string id, string name, IEnumerable<ILog> logs, LogSummary summary)
         {
             if (!Directory.Exists("Temp"))
                 Directory.CreateDirectory("Temp");
@@ -647,6 +699,15 @@ namespace SFC.Canteen.ViewModels
             {
                 doc.ReplaceText("[RFID]", id);
                 doc.ReplaceText("[NAME]", name);
+                doc.ReplaceText("[R_NAME]",summary.R_NAME);
+                doc.ReplaceText("[R_VALUE]", summary.R_VALUE);
+                doc.ReplaceText("[SUM_1]", summary.SUM_1);
+                doc.ReplaceText("[SUM_2]", summary.SUM_2);
+                doc.ReplaceText("[SUM_3]", summary.SUM_3);
+                doc.ReplaceText("[VALUE_1]", summary.VALUE_1);
+                doc.ReplaceText("[VALUE_2]", summary.VALUE_2);
+                doc.ReplaceText("[VALUE_3]", summary.VALUE_3);
+
                 var tbl = doc.Tables.First();
 
                 foreach (var item in logs)
