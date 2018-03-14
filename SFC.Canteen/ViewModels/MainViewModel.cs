@@ -232,7 +232,7 @@ namespace SFC.Canteen.ViewModels
                 }
                 break;
             }
-        }));
+        },d=>CurrentUser?.StudentsAdmin??false));
 
         private ICommand _newEmployeeCommand;
 
@@ -273,7 +273,7 @@ namespace SFC.Canteen.ViewModels
                 break;
             }
 
-        }));
+        },d=>CurrentUser?.EmployeesAdmin??false));
 
         private ICommand _ShowAboutCommand;
 
@@ -424,7 +424,7 @@ namespace SFC.Canteen.ViewModels
                 break;
             }
             
-        }));
+        },d=>CurrentUser?.ProductsAdmin??false));
 
         private ICommand _newStocksCOmmand;
 
@@ -450,13 +450,13 @@ namespace SFC.Canteen.ViewModels
                     product.Update(nameof(product.Quantity), product.Quantity + qty);
                     if (qty == 1)
                     {
-                        ProductLog.Add(product.Id, "New item added.");
-                    }
-                    ProductLog.Add(product.Id, $"{qty} stocks were added.");
+                        ProductLog.Add(product.Id, "New item added.",CurrentUser.Id);
+                    } else
+                    ProductLog.Add(product.Id, $"{qty} stocks were added.",CurrentUser.Id);
                 }
                 break;
             }
-        },d=>d!=null));
+        },d=>d!=null && (CurrentUser?.ProductsAdmin??false)));
 
         private ICommand _StartSalesCommand;
 
@@ -503,6 +503,7 @@ namespace SFC.Canteen.ViewModels
         },d=>
         {
             if (!PosViewModel.IsTransactionStarted) return false;
+            if (!(CurrentUser?.SalesAdmin ?? false)) return false;
             return PosViewModel.AddProductCommand.CanExecute(Products.CurrentItem);
         }));
 

@@ -9,6 +9,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:SFC.Canteen.Converters"
              mc:Ignorable="d" 
+             IsEnabled="{Binding Source={x:Static viewModels:MainViewModel.Instance},Path=CurrentUser.EmployeesAdmin}"
              Background="DarkGray"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>

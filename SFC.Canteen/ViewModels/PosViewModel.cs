@@ -211,7 +211,8 @@ namespace SFC.Canteen.ViewModels
                 saleItem.Product.Update(nameof(Product.Quantity),saleItem.Product.Quantity - saleItem.Quantity);
                 saleItem.Save();
                 ProductLog.Add(saleItem.ProductId,
-                    $"{Customer.Fullname} bought {saleItem.Quantity:#,##0.00} for Php {saleItem.Amount:#,##0.00}. REF#{sale.Id}");
+                    $"{Customer.Fullname} bought {saleItem.Quantity:#,##0.00} for Php {saleItem.Amount:#,##0.00}. REF#{sale.Id}",
+                    MainViewModel.Instance.CurrentUser.Id);
             }
             var msg = "";
             if (Items.Count == 1)
