@@ -25,7 +25,7 @@ namespace SFC.Canteen.ViewModels
                     return;
                 _Code = value;
                 OnPropertyChanged(nameof(Code));
-                AddProduct = Product.Cache.FirstOrDefault(x => x.Code == value);
+                AddProduct = Product.Cache.FirstOrDefault(x => x.Code.ToLower() == value.ToLower());
             }
         }
 
@@ -89,6 +89,7 @@ namespace SFC.Canteen.ViewModels
                     if (c < 0) c = 0.0;
                     return c;
                 }
+                if (TotalAmount > Customer?.Credits) return 0.0;
                 return Customer?.Credits - TotalAmount ?? 0;
             }
         }
@@ -172,6 +173,8 @@ namespace SFC.Canteen.ViewModels
         {
             Customer = null;
             Items.Clear();
+            OnPropertyChanged(nameof(TotalAmount));
+            OnPropertyChanged(nameof(Change));
         }));
 
         private ICommand _addProductCommand;
@@ -211,6 +214,7 @@ namespace SFC.Canteen.ViewModels
                 if (value == _AmountReceived) return;
                 _AmountReceived = value;
                 OnPropertyChanged(nameof(AmountReceived));
+                OnPropertyChanged(nameof(Change));
             }
         }
         
@@ -225,13 +229,21 @@ namespace SFC.Canteen.ViewModels
                 MessageBox.Show($"{Customer.Fullname} does not have enough credits.");
                 return;
             }
+
+            var rcv = 0.0;
+            if(Customer.Id!=-7)
+            if (Customer.Credits < 0)
+                rcv = TotalAmount;
+            else if (Customer.Credits<TotalAmount)
+                rcv = TotalAmount - Customer.Credits;
             
             var sale = new Sale()
             {
                 UserId = MainViewModel.Instance.CurrentUser.Id,
                 CustomerId = Customer.Id,
                 Time = DateTime.Now,
-                Amount = TotalAmount
+                Amount = TotalAmount,
+                Receivable = rcv,
             };
             sale.Save();
 
@@ -241,14 +253,14 @@ namespace SFC.Canteen.ViewModels
                 saleItem.Product.Update(nameof(Product.Quantity),saleItem.Product.Quantity - saleItem.Quantity);
                 saleItem.Save();
                 ProductLog.Add(saleItem.ProductId,
-                    $"{Customer.Fullname} bought {saleItem.Quantity:#,##0.00} for Php {saleItem.Amount:#,##0.00}. REF#{sale.Id}",
+                    $"{Customer.Fullname} bought {saleItem.Quantity:#,##0.##} for Php {saleItem.Amount:#,##0.00}. REF#{sale.Id}",
                     MainViewModel.Instance.CurrentUser.Id);
             }
             var msg = "";
             if (Items.Count == 1)
             {
                 var item = Items.FirstOrDefault();
-                msg = $"Bought {item.Quantity} {item.Product.Description} for {item.Amount:#,##0.00}. REF#{sale.Id}";
+                msg = $"Bought {item.Quantity:#,##0.##} {item.Product.Description} for {item.Amount:#,##0.00}. REF#{sale.Id}";
             }
             else
             {
@@ -270,7 +282,7 @@ namespace SFC.Canteen.ViewModels
             OnPropertyChanged(nameof(TotalAmount));
         },d=>
         {
-            if (Customer?.Id == -1)
+            if (Customer?.Id == -7)
             {
                 if (AmountReceived < TotalAmount) return false;
             }
