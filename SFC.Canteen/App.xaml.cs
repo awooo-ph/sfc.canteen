@@ -4,7 +4,9 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using SFC.Canteen.Models;
 using SFC.Canteen.Properties;
+using SFC.Canteen.ViewModels;
 
 namespace SFC.Canteen
 {
@@ -21,6 +23,7 @@ namespace SFC.Canteen
 
         protected override void OnExit(ExitEventArgs e)
         {
+            MainViewModel.Session?.Update(nameof(Session.TimeOut),DateTime.Now);
             Settings.Default.Save();
             awooo.IsRunning = false;
             base.OnExit(e);
