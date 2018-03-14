@@ -14,6 +14,7 @@
         xmlns:viewModels1="clr-namespace:SFC.Canteen.ViewModels;assembly=SFC.Canteen.Data"
         xmlns:properties="clr-namespace:SFC.Canteen.Properties;assembly=SFC.Canteen.Data"
         WindowStartupLocation="CenterScreen"
+        MinWidth="444"
         ResizeMode="NoResize">
     <TabControl x:Name="Tab">
     <TabItem Header="RFID">
@@ -26,6 +27,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="DEVICE ID: "
                            Margin="10"
@@ -67,7 +69,14 @@
                     <Button Content="CANCEL" Visibility="Collapsed" x:Name="CancelButton" Click="CancelButton_OnClick"/>
                     <Button Content="REGISTER SCANNER" x:Name="RegButton" Click="RegButton_OnClick"/>
                 </Grid>
-            </Grid>
+
+        <Grid Margin="10" Grid.Row="3" Grid.ColumnSpan="2">
+          <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=VisitorCard}"
+                   md:HintAssist.Hint="Visitors' Card"
+                   md:HintAssist.IsFloating="True">
+          </TextBox>
+        </Grid>
+      </Grid>
         </TabItem>
         <TabItem Header="SMS">
             <Grid>
