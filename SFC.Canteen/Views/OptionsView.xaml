@@ -140,8 +140,28 @@
                             </md:PackIcon.ToolTip>
                         </md:PackIcon>
                     </Grid>
-                    
+
+          <Grid Margin="10">
+            <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=FullPaymentMessage}"
+                     md:HintAssist.Hint="Message sent to employees on full payment."
+                     md:HintAssist.IsFloating="True"
+                     AcceptsReturn="True">
+            </TextBox>
+            <md:PackIcon Kind="HelpCircle"
+                         Cursor="Hand"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Top">
+              <md:PackIcon.ToolTip>
+                <StackPanel>
+                  <TextBlock>
+                    <Run Text="[AMOUNT]" FontWeight="Bold" /><Run Text=": Total amount paid." />
+                  </TextBlock>
                 </StackPanel>
+              </md:PackIcon.ToolTip>
+            </md:PackIcon>
+          </Grid>
+
+        </StackPanel>
                 <Button Grid.Row="1" Content="SAVE" Click="ButtonBase_OnClick"/>
             </Grid>
         </TabItem>
@@ -179,7 +199,13 @@
                         <TextBlock Text="Username: " Margin="10"/>
                         <TextBox Text="{Binding Username,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}" Margin="10" Width="174"/>
                     </StackPanel>
-                    <CheckBox Content="Students" IsChecked="{Binding StudentsAdmin}" Margin="10"/>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Name: " Margin="10" />
+            <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
+                     Margin="10" Width="174" />
+          </StackPanel>
+                  
+          <CheckBox Content="Students" IsChecked="{Binding StudentsAdmin}" Margin="10"/>
                     <CheckBox Content="Employees" IsChecked="{Binding EmployeesAdmin}" Margin="10" />
                     <CheckBox Content="Produtcs" IsChecked="{Binding ProductsAdmin}" Margin="10" />
                     <CheckBox Content="Point of Sale" IsChecked="{Binding SalesAdmin}" Margin="10" />

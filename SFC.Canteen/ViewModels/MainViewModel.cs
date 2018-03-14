@@ -322,11 +322,14 @@ namespace SFC.Canteen.ViewModels
         public ICommand PayFullCommand => _payFullCommand ?? (_payFullCommand = new DelegateCommand<Customer>(d =>
         {
             CustomerLog.Add(d.Id,CurrentUser.Id, $"Full payment of {Math.Abs(d.Credits):#,##0.00}.");
+
+            var sms = Settings.Default.FullPaymentMessage
+                .Replace("[AMOUNT]", Math.Abs(d.Credits).ToString("#,##0.00"));
             
-            SMS.Send($"You have paid a total amount of {Math.Abs(d.Credits):#,##0.00}.", d.ContactNumber);
+            SMS.Send(sms, d.ContactNumber);
             
-            var sale = Sale.Create(CurrentUser.Id, d.Id,Math.Abs(d.Credits), true);
-            sale.Save();
+           // var sale = Sale.Create(CurrentUser.Id, d.Id,Math.Abs(d.Credits), true);
+           // sale.Save();
             d.Update(nameof(Customer.Credits), 0.0);
         },d=>d!=null && d.Utangan));
 
@@ -457,7 +460,7 @@ namespace SFC.Canteen.ViewModels
                     {
                         ProductLog.Add(product.Id, "New item added.",CurrentUser.Id);
                     } else
-                    ProductLog.Add(product.Id, $"{qty} stocks were added.",CurrentUser.Id);
+                    ProductLog.Add(product.Id, $"{qty:#,##0.##} stocks were added.",CurrentUser.Id);
                 }
                 break;
             }
@@ -540,6 +543,7 @@ namespace SFC.Canteen.ViewModels
             {
                 var tbl = doc.Tables.First();
                 var items = Product.Cache.ToList();
+                var total = 0.0;
                 foreach (var item in items)
                 {
                     var r = tbl.InsertRow();
@@ -567,14 +571,17 @@ namespace SFC.Canteen.ViewModels
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
 
-                    p = r.Cells[5].Paragraphs.First().Append(
-                        SaleItem.Cache
-                            .Where(x => x.ProductId == item.Id)
-                            .Sum(x => x.Amount).ToString("#,##0.00")
-                    );
+                    var s = SaleItem.Cache
+                        .Where(x => x.ProductId == item.Id)
+                        .Sum(x => x.Amount);
+                    total += s;
+                    p = r.Cells[5].Paragraphs.First().Append(s.ToString("#,##0.00"));
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
                 }
+                
+                doc.ReplaceText("[TOTAL]",total.ToString("#,##0.00"));
+                
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
                     System.Drawing.Color.Black);
                 tbl.SetBorder(TableBorderType.Bottom, border);
@@ -789,12 +796,18 @@ namespace SFC.Canteen.ViewModels
                 return;
             }
             CurrentUser = user;
+            Session = new Session(){UserId = user.Id};
+            Session.Save();
         }
+
+        public static Session Session { get; private set; }
+
 
         private ICommand _logoutCommand;
 
         public ICommand LogoutCommand => _logoutCommand ?? (_logoutCommand = new DelegateCommand(d =>
         {
+            Session?.Update(nameof(Session.TimeOut),DateTime.Now);
             CurrentUser = null;
             ((MainWindow) Application.Current.MainWindow).ShowLogin();
         }));
