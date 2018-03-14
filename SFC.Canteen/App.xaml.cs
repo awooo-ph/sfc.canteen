@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using SFC.Canteen.Properties;
 
 namespace SFC.Canteen
 {
@@ -20,6 +21,7 @@ namespace SFC.Canteen
 
         protected override void OnExit(ExitEventArgs e)
         {
+            Settings.Default.Save();
             awooo.IsRunning = false;
             base.OnExit(e);
         }

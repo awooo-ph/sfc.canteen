@@ -53,6 +53,7 @@ namespace SFC.Canteen.Views
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            Settings.Default.Save();
             if(RfidScanner.IsWaitingForScanner)
                 RfidScanner.CancelRegistration();
             base.OnClosing(e);

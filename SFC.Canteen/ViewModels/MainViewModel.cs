@@ -30,7 +30,12 @@ namespace SFC.Canteen.ViewModels
             {
                 if (SelectedTab != POS) return;
                 if (PosViewModel.IsTransactionStarted) return;
-                var customer = Customer.Cache.FirstOrDefault(x => x.RFID.ToLower() == code.ToLower());
+                Customer customer = null;
+                if (code.ToLower() == Settings.Default.VisitorCard.ToLower())
+                    customer = Customer.Visitor;
+                else
+                    customer = Customer.Cache.FirstOrDefault(x => x.RFID.ToLower() == code.ToLower());
+                
                 if (customer == null) return;
                 PosViewModel.Customer = customer;
                 PosViewModel.IsTransactionStarted = true;

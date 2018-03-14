@@ -71,13 +71,28 @@ namespace SFC.Canteen.ViewModels
                 _Customer = value;
                 OnPropertyChanged(nameof(Customer));
                 OnPropertyChanged(nameof(IsTransactionStarted));
+                OnPropertyChanged(nameof(IsVisitor));
             }
         }
+
+        public bool IsVisitor => Customer?.Id == -7;
         
         public double TotalAmount => Items.Sum(x=>x.Amount);
 
-        public double Change => Customer?.Credits - TotalAmount ?? 0;
-        
+        public double Change
+        {
+            get
+            {
+                if (Customer?.Id == -7)
+                {
+                   var c = AmountReceived-TotalAmount;
+                    if (c < 0) c = 0.0;
+                    return c;
+                }
+                return Customer?.Credits - TotalAmount ?? 0;
+            }
+        }
+
         private bool _IsTransactionStarted;
 
         public bool IsTransactionStarted
@@ -183,9 +198,24 @@ namespace SFC.Canteen.ViewModels
             return Customer != null && d != null &&
                                                             d.Quantity >= Quantity &&
                                                             (d.Price * Quantity + TotalAmount <=
-                                                            Customer.Credits || !Customer.IsStudent);
+                                                            Customer.Credits || !Customer.IsStudent || Customer.Id==-7);
         }));
 
+        private double _AmountReceived;
+
+        public double AmountReceived
+        {
+            get => _AmountReceived;
+            set
+            {
+                if (value == _AmountReceived) return;
+                _AmountReceived = value;
+                OnPropertyChanged(nameof(AmountReceived));
+            }
+        }
+        
+        
+        
         private ICommand _checkoutCommand;
 
         public ICommand CheckoutCommand => _checkoutCommand ?? (_checkoutCommand = new DelegateCommand(d =>
@@ -238,7 +268,15 @@ namespace SFC.Canteen.ViewModels
             Customer = null;
             OnPropertyChanged(nameof(Change));
             OnPropertyChanged(nameof(TotalAmount));
-        },d=>Items.Count>0));
+        },d=>
+        {
+            if (Customer?.Id == -1)
+            {
+                if (AmountReceived < TotalAmount) return false;
+            }
+            
+            return Items.Count > 0;
+        }));
 
         public string this[string columnName]
         {

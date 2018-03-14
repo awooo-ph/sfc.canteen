@@ -155,16 +155,36 @@
                        Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
 
                 <TextBlock Text="CREDITS: " Grid.Column="1" Grid.Row="1"
+                           Visibility="{Binding IsVisitor,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                        FontFamily="Consolas"
                        VerticalAlignment="Center"
                        Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
                 <TextBlock Text="{Binding Customer.Credits,StringFormat={}#\,##0.00}" Grid.Column="2" FontWeight="Bold" Grid.Row="1"
                        FontFamily="Consolas"
+                           Visibility="{Binding IsVisitor,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                        TextAlignment="Right"
                        VerticalAlignment="Center"
                        Style="{StaticResource MaterialDesignHeadlineTextBlock}" />
 
-                <TextBlock Text="CHANGE: " Grid.Column="1" Grid.Row="2"
+
+        <TextBlock Text="AMOUNT RECEIVED: " Grid.Column="1" Grid.Row="1"
+                   Visibility="{Binding IsVisitor,Converter={converters:BooleanToVisibility}}"
+                   FontFamily="Consolas"
+                   VerticalAlignment="Center"
+                   Style="{StaticResource MaterialDesignSubheadingTextBlock}" />
+              <TextBox Text="{Binding AmountReceived, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" FontWeight="Bold"
+                         Grid.Row="1"
+                       FontSize="17pt"
+                       Margin="0 7"
+                       VerticalContentAlignment="Center"
+                         FontFamily="Consolas"
+                         Visibility="{Binding IsVisitor,Converter={converters:BooleanToVisibility}}"
+                         TextAlignment="Right"
+                       md:TextFieldAssist.HasTextAreaBox="True"
+                         VerticalAlignment="Center"/>
+              
+
+        <TextBlock Text="CHANGE: " Grid.Column="1" Grid.Row="2"
                        FontFamily="Consolas"
                            VerticalAlignment="Center"
                        Style="{StaticResource MaterialDesignSubheadingTextBlock}" />

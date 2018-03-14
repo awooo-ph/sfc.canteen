@@ -71,7 +71,7 @@
                 </Grid>
 
         <Grid Margin="10" Grid.Row="3" Grid.ColumnSpan="2">
-          <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=VisitorCard}"
+          <TextBox Text="{Binding Source={x:Static properties:Settings.Default},Path=VisitorCard,UpdateSourceTrigger=PropertyChanged}"
                    md:HintAssist.Hint="Visitors' Card"
                    md:HintAssist.IsFloating="True">
           </TextBox>
