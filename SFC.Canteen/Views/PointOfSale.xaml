@@ -55,6 +55,10 @@
                                  materialDesign:HintAssist.Hint="{Binding AddProduct,Converter={converters:ProductConverter}, FallbackValue=PRODUCT\ CODE}"
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"/>
+                                  <Button Content="{md:PackIcon Magnify}"
+                                          Style="{StaticResource MaterialDesignFlatButton}"
+                                          VerticalAlignment="Center"
+                                          Command="{Binding LookupCommand}"/>
 
                                     <TextBox Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=False,ValidatesOnDataErrors=True}"
                                      Margin="10 0"

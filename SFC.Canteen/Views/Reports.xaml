@@ -105,7 +105,13 @@
 
       <GroupBox Header="USERS" Grid.Row="0" Grid.RowSpan="2"
               >
-        <ListBox ItemsSource="{Binding Source={x:Static models:User.Cache}}">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+        <ListBox ItemsSource="{Binding Source={x:Static models:User.Cache}}"
+                 SelectionMode="Single">
           <ListBox.ItemTemplate>
             <DataTemplate>
               <Grid>
@@ -122,6 +128,8 @@
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
+
+        </Grid>
       </GroupBox>
           
         <DataGrid ItemsSource="{Binding Report}"

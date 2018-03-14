@@ -1,0 +1,42 @@
+﻿<Window x:Class="SFC.Canteen.Views.ProductSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SFC.Canteen.Views"
+        xmlns:models="clr-namespace:SFC.Canteen.Models;assembly=SFC.Canteen.Data"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="Height"
+        Title="Select Item" MaxHeight="444" Width="333">
+    <Grid>
+    <ListBox ItemsSource="{Binding Source={x:Static models:Product.Cache}}"
+             SelectionChanged="Selector_OnSelectionChanged"
+             x:Name="Box"
+             SelectionMode="Single">
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type models:Product}">
+          <StackPanel>
+            <TextBlock Text="{Binding Description}" FontWeight="Bold" FontSize="15pt"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+              </Grid.ColumnDefinitions>
+
+              <TextBlock FontSize="14pt">
+                <Run Text="Price: "/><Run Text="{Binding Price,StringFormat={}#\,##0\.00}" FontWeight="Bold"/>
+              </TextBlock>
+              <TextBlock Grid.Column="1" FontSize="14pt">
+                <Run Text=" Quantity: " /><Run Text="{Binding Quantity,StringFormat={}#\,##0\.##}" FontWeight="Bold"/>
+              </TextBlock>
+              
+            </Grid>
+          </StackPanel>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    </Grid>
+</Window>

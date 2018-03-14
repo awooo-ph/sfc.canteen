@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using SFC.Canteen.Models;
 using SFC.Canteen.Properties;
+using SFC.Canteen.Views;
 
 namespace SFC.Canteen.ViewModels
 {
@@ -75,6 +76,17 @@ namespace SFC.Canteen.ViewModels
             }
         }
 
+        private ICommand _lookupCommand;
+
+        public ICommand LookupCommand => _lookupCommand ?? (_lookupCommand = new DelegateCommand(d =>
+        {
+            var dlg = new ProductSelector();
+            if (dlg.ShowDialog() ?? false)
+            {
+                Code = dlg.SelectedProduct?.Code;
+            }
+        }));
+
         public bool IsVisitor => Customer?.Id == -7;
         
         public double TotalAmount => Items.Sum(x=>x.Amount);
@@ -125,8 +137,6 @@ namespace SFC.Canteen.ViewModels
             get => _SearchKeyword;
             set
             {
-                if (value == _SearchKeyword)
-                    return;
                 _SearchKeyword = value;
                 OnPropertyChanged(nameof(SearchKeyword));
                 Result.Filter = Filter;
