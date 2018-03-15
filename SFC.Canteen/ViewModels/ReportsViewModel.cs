@@ -403,6 +403,10 @@ namespace SFC.Canteen.ViewModels
 
                 }
 
+                var users = "";
+                User.Cache.Where(x=>x.IsSelected).ToList().ForEach(x=>users+=x.Name + ", ");
+                users = users.Substring(0, users.Length - 2);
+                doc.ReplaceText("[USER]", users);
                 doc.ReplaceText("[DEPOSITS]", deposits.ToString("#,##0.00"));
                 doc.ReplaceText("[RECEIVABLES]", receivables.ToString("#,##0.00"));
                 doc.ReplaceText("[SALES]", total.ToString("#,##0.00"));
