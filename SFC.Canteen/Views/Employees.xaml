@@ -21,6 +21,9 @@
             <ColumnDefinition Width="*" MinWidth="147" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+    <Button Grid.Row="1" HorizontalAlignment="Right" Content="PRINT RECEIVABLES"
+            Margin="7"
+            Command="{Binding Source={x:Static viewModels:ReportsViewModel.Instance},Path=PrintReceivablesCommand}"/>
         <md:Card Grid.Row="1" Margin="7" HorizontalAlignment="Left" UniformCornerRadius="7">
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding EmployeesKeyword,UpdateSourceTrigger=PropertyChanged}"
