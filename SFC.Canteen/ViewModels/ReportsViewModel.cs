@@ -278,6 +278,78 @@ namespace SFC.Canteen.ViewModels
         private ICommand _printCommand;
         public ICommand PrintCommand => _printCommand??(_printCommand = new DelegateCommand(d =>
         {
+            PrintReport(Report.Cast<Sale>().OrderBy(x => x.CustomerId).ToList());
+        }));
+
+        private ICommand _printStudentsCommand;
+
+        public ICommand PrintStudentsCommand => _printStudentsCommand ?? (_printStudentsCommand = new DelegateCommand(
+        d =>
+        {
+            PrintReport(Report.Cast<Sale>().Where(x=>x.Customer?.IsStudent??false).OrderBy(x=>x.Customer.Fullname).ToList());
+        }));
+
+        private ICommand _printReceivablesCommand;
+
+        public ICommand PrintReceivablesCommand =>
+            _printReceivablesCommand ?? (_printReceivablesCommand = new DelegateCommand(
+                d =>
+                {
+                    if (!Directory.Exists("Temp"))
+                        Directory.CreateDirectory("Temp");
+
+                    var temp = Path.Combine("Temp", $"Receivables Report [{DateTime.Now:yy-MMM-dd}].docx");
+                    using (var doc = DocX.Load($@"Templates\Receivables.docx"))
+                    {
+                        var tbl = doc.Tables.First();
+                        var deposits = 0.0;
+                        var receivables = 0.0;
+                        var total = 0.0;
+                        
+                        foreach (var item in Customer.Cache.ToList())
+                        {
+
+                            if(item.Credits>=0) continue;
+                            total += Math.Abs(item.Credits);
+                            var r = tbl.InsertRow();
+
+                            var p = r.Cells[0].Paragraphs.First().Append(item.Fullname);
+                            p.LineSpacingAfter = 0;
+                            p.Alignment = Alignment.left;
+
+                            p = r.Cells[1].Paragraphs.First().Append(item.Course);
+                            p.LineSpacingAfter = 0;
+                            p.Alignment = Alignment.left;
+
+                            p = r.Cells[2].Paragraphs.First().Append(Math.Abs(item.Credits).ToString("0.00"));
+                            p.LineSpacingAfter = 0;
+                            p.Alignment = Alignment.right;
+
+                        }
+
+                        var date = DateStart.ToString("MMM d, yyyy");
+                        if (DateStart.Date != DateEnd.Date)
+                        {
+                            date += " - " + DateEnd.ToString("MMM d, yyyy");
+                        }
+                        doc.ReplaceText("[TOTAL]", total.ToString("0.00"));
+
+                        var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
+                            System.Drawing.Color.Black);
+                        tbl.SetBorder(TableBorderType.Bottom, border);
+                        tbl.SetBorder(TableBorderType.Left, border);
+                        tbl.SetBorder(TableBorderType.Right, border);
+                        tbl.SetBorder(TableBorderType.Top, border);
+                        tbl.SetBorder(TableBorderType.InsideV, border);
+                        tbl.SetBorder(TableBorderType.InsideH, border);
+                        File.Delete(temp);
+                        doc.SaveAs(temp);
+                    }
+                    MainViewModel.Print(temp);
+                }));
+
+        private void PrintReport(List<Sale> sales)
+        {
             if (!Directory.Exists("Temp"))
                 Directory.CreateDirectory("Temp");
 
@@ -289,15 +361,15 @@ namespace SFC.Canteen.ViewModels
                 var receivables = 0.0;
                 var total = 0.0;
                 var ids = new List<long>();
-                var sales = Report.Cast<Sale>().OrderBy(x => x.CustomerId).ToList();
+                
                 foreach (var item in sales)
                 {
-                    
+
                     if (ids.Contains(item.CustomerId)) continue;
                     ids.Add(item.CustomerId);
-                    
+
                     var r = tbl.InsertRow();
-                    
+
                     var p = r.Cells[0].Paragraphs.First().Append(item.Customer.Fullname);
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.left;
@@ -310,7 +382,7 @@ namespace SFC.Canteen.ViewModels
                         p.LineSpacingAfter = 0;
                         p.Alignment = Alignment.right;
                     }
-                    
+
                     if (item.Customer.Credits < 0)
                     {
                         p = r.Cells[2].Paragraphs.First().Append(Math.Abs(item.Customer.Credits).ToString("0.00"));
@@ -318,7 +390,7 @@ namespace SFC.Canteen.ViewModels
                         p.LineSpacingAfter = 0;
                         p.Alignment = Alignment.right;
                     }
-                    
+
                     dep = sales.Where(x => !x.Topup && x.CustomerId == item.CustomerId)
                         .Sum(x => x.Amount);
                     if (dep > 0)
@@ -328,10 +400,10 @@ namespace SFC.Canteen.ViewModels
                         p.LineSpacingAfter = 0;
                         p.Alignment = Alignment.right;
                     }
-                    
+
                 }
-                
-                doc.ReplaceText("[DEPOSITS]",deposits.ToString("#,##0.00"));
+
+                doc.ReplaceText("[DEPOSITS]", deposits.ToString("#,##0.00"));
                 doc.ReplaceText("[RECEIVABLES]", receivables.ToString("#,##0.00"));
                 doc.ReplaceText("[SALES]", total.ToString("#,##0.00"));
                 doc.ReplaceText("[TRANSACTIONS]", sales.Count.ToString("#,##0"));
@@ -341,7 +413,7 @@ namespace SFC.Canteen.ViewModels
                 {
                     date += " - " + DateEnd.ToString("MMM d, yyyy");
                 }
-                doc.ReplaceText("[DATE]",date);
+                doc.ReplaceText("[DATE]", date);
 
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
                     System.Drawing.Color.Black);
@@ -355,7 +427,7 @@ namespace SFC.Canteen.ViewModels
                 doc.SaveAs(temp);
             }
             MainViewModel.Print(temp);
-        }));
+        }
         
         
 
