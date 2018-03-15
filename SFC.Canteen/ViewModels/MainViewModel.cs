@@ -544,6 +544,8 @@ namespace SFC.Canteen.ViewModels
                 var tbl = doc.Tables.First();
                 var items = Product.Cache.ToList();
                 var total = 0.0;
+                var sold = 0.0;
+                var qty = 0.0;
                 foreach (var item in items)
                 {
                     var r = tbl.InsertRow();
@@ -559,15 +561,18 @@ namespace SFC.Canteen.ViewModels
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
 
+                    qty += item.Quantity;
                     p = r.Cells[3].Paragraphs.First().Append(item.Quantity.ToString("#,##0.##"));
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
 
+                    var s1 = SaleItem.Cache
+                        .Where(x => x.ProductId == item.Id)
+                        .Sum(x => x.Quantity);
                     p = r.Cells[4].Paragraphs.First().Append(
-                        SaleItem.Cache
-                            .Where(x => x.ProductId == item.Id)
-                            .Sum(x=>x.Quantity).ToString("#,##0.##")
+                        s1.ToString("#,##0.##")
                     );
+                    sold += s1;
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
 
@@ -578,10 +583,30 @@ namespace SFC.Canteen.ViewModels
                     p = r.Cells[5].Paragraphs.First().Append(s.ToString("#,##0.00"));
                     p.LineSpacingAfter = 0;
                     p.Alignment = Alignment.right;
+                    
+                    
                 }
+
+                var r2 = tbl.InsertRow();
                 
-                doc.ReplaceText("[TOTAL]",total.ToString("#,##0.00"));
-                
+                r2.MergeCells(0,2);
+
+                var p2 = r2.Cells[0].Paragraphs.First().Append("TOTAL");
+                p2.LineSpacingAfter = 0;
+                p2.Alignment = Alignment.center;
+
+                p2 = r2.Cells[1].Paragraphs.First().Append(qty.ToString("#,##0.##"));
+                p2.LineSpacingAfter = 0;
+                p2.Alignment = Alignment.right;
+
+                p2 = r2.Cells[2].Paragraphs.First().Append(sold.ToString("#,##0.##"));
+                p2.LineSpacingAfter = 0;
+                p2.Alignment = Alignment.right;
+
+                p2 = r2.Cells[3].Paragraphs.First().Append(total.ToString("#,##0.00"));
+                p2.LineSpacingAfter = 0;
+                p2.Alignment = Alignment.right;
+
                 var border = new Xceed.Words.NET.Border(BorderStyle.Tcbs_single, BorderSize.one, 0,
                     System.Drawing.Color.Black);
                 tbl.SetBorder(TableBorderType.Bottom, border);
